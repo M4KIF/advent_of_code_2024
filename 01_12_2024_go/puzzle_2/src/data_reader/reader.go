@@ -52,6 +52,13 @@ func (d *PuzzleTwoData) TakeInput(path string, file_io icrud.CRUD) bool {
 			return false
 		}
 
+		// // Utilized @github mnml code for splitting the read line
+		// var n1, n2 int
+		// fmt.Sscanf(scanner.Text(), "%d   %d", &n1, &n2)
+		// // Appending the Arrays
+		// d.LeftArray = append(d.LeftArray, n1)
+		// d.RightArray = append(d.RightArray, n2)
+
 		// Appending the Arrays
 		d.LeftArray = append(d.LeftArray, left)
 		d.RightArray = append(d.RightArray, right)
