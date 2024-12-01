@@ -4,7 +4,7 @@ import (
 	"math"
 	"slices"
 
-	"github.com/M4KIF/advent_of_code_2024/01_12_2024/iter_1/io"
+	"github.com/M4KIF/advent_of_code_2024/01_12_2024_go/puzzle_1/src/io"
 )
 
 type Sollution struct{}
