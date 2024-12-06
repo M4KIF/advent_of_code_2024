@@ -12,5 +12,6 @@ public class Main {
         var p2 = new PuzzleTwo();
 
         System.out.print("Result one: " + p1.solve_first() + "\n");
+        System.out.print("Result two: " + p1.solve_second() + "\n");
     }
 }

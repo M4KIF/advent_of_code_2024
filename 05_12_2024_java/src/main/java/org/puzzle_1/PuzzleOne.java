@@ -29,6 +29,8 @@ public class PuzzleOne {
 
         this.ruleSets = new ArrayList<>();
         this.updates = new ArrayList<>();
+
+        readData();
     }
 
     public Set<List<Integer>> find_appliable_rules(List<Integer> values) {
@@ -56,7 +58,6 @@ public class PuzzleOne {
     }
 
     public int solve_first() {
-        readData();
 
 //        System.out.println(this.updates.get(0));
 //        System.out.println(this.ruleSets);
@@ -86,6 +87,120 @@ public class PuzzleOne {
         }
 
         return jeden;
+    }
+
+    public int solve_second() {
+        ArrayList<Map<Integer, Integer>> brokens = new ArrayList<>();
+
+
+        for (Map<Integer, Integer> u : this.updates) {
+            Set<List<Integer>> rules = find_appliable_rules(new ArrayList<>(u.keySet()));
+
+            int match_count = 0;
+            for (List<Integer> r : rules) {
+                if (u.containsKey(r.getFirst()) && u.containsKey(r.getLast())) {
+                    if (u.get(r.getFirst()) < u.get(r.getLast())) {
+                        match_count++;
+                    }
+                }
+            }
+            if (match_count != rules.size()) {
+                brokens.add(u);
+                System.out.println(brokens);
+            }
+        }
+
+        int he = 0;
+        for (Map<Integer, Integer> u : brokens) {
+            for(int i = 0; i < u.size(); i++) {
+                Set<List<Integer>> rules = find_appliable_rules(new ArrayList<>(u.keySet()));
+
+                for (List<Integer> r : rules) {
+                    if (u.containsKey(r.getFirst()) && u.containsKey(r.getLast())) {
+                        if (u.get(r.getFirst()) > u.get(r.getLast())) {
+                            // on this step it stops checking
+                            var temp = u.get(r.getFirst());
+                            u.put(r.getFirst(), u.get(r.getLast()));
+                            u.put(r.getLast(), temp);
+                        }
+                    }
+                }
+            }
+        }
+
+        for (Map<Integer, Integer> u : brokens) {
+            Set<List<Integer>> rules = find_appliable_rules(new ArrayList<>(u.keySet()));
+
+            int match_count = 0;
+            for (List<Integer> r : rules) {
+                if (u.containsKey(r.getFirst()) && u.containsKey(r.getLast())) {
+                    if (u.get(r.getFirst()) < u.get(r.getLast())) {
+                        match_count++;
+                    }
+                }
+            }
+            if (match_count == rules.size()) {
+                Map<Integer, Integer> newMap = u.entrySet().stream().collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
+                //System.out.println(newMap);
+                he += newMap.get(newMap.size()/2);
+            }
+
+        }
+
+        return he;
+
+//        // Retrieved the broken ones
+////        brokenUpdates.forEach((l, r) -> {
+////            System.out.println("Keyset: " + l.keySet() + " errors: " + r);
+////        });
+//
+//        int brokenSum = 0;
+//        // How to apply rulesets to the broken ones? Iterate over each and every one XD
+//        for (Map.Entry<Map<Integer, Integer>, Integer> e : brokenUpdates.entrySet()) {
+//            Map<Integer, Integer> u = e.getKey();
+//// I have the broken update and the error count
+//
+//            // Searching for applicable rules
+//            Set<List<Integer>> rules = find_appliable_rules(new ArrayList<>(u.keySet()));
+//
+//            System.out.println("Pred: " + u);
+//            for (Map.Entry<Integer, Integer> entry : u.entrySet()) {
+//                // applying the rules to a single entry
+//
+//                for (List<Integer> r : rules) {
+//                    if (Objects.equals(entry.getKey(), r.getLast())) {
+//                        if (entry.getValue() > u.get(r.getFirst())) {
+//                            // Substitute
+//                            var te  mp = u.get(entry.getKey());
+//                            u.put(entry.getKey(), u.get(r.getLast()));
+//                            u.put(r.getFirst(), temp);
+//                            System.out.println("Zmianu: " + u);
+//                        }
+//                    }
+//                }
+//            }
+//
+//            System.out.println("Po: " + u);
+//
+//            int match_count = 0;
+//            for (List<Integer> r : rules) {
+//                if (u.containsKey(r.getFirst()) && u.containsKey(r.getLast())) {
+//                    if (u.get(r.getFirst()) < u.get(r.getLast())) {
+//                        match_count++;
+//                    }
+//                }
+//            }
+//
+//
+//            if (match_count == rules.size()) {
+//                Map<Integer, Integer> newMap = u.entrySet().stream().collect(Collectors.toMap(Map.Entry::getValue, Map.Entry::getKey));
+//                brokenSum += newMap.get(newMap.size() / 2);
+//            }
+//
+//        }
+//
+//
+//        return brokenSum;
     }
 
     private void readData() {
