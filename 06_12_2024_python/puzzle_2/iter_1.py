@@ -59,14 +59,17 @@ def test_obstruction(x_t, y_t, x_start, y_start, c_t, dir_x, dir_y, area_p, visi
     else:
         return rany
 
-    count = 0
-    last_dir = c_t
-    single_vertice_loop = 0
-    counter = 0
     occurence = dict()
+    ciekawe = 0
 
     while(in_bounds(x_t + dir_x[c_t], y_t + dir_y[c_t], len(visited[0]), len(visited))):
         if is_next_move_blocking(y_t,x_t,dir_y[c_t],dir_x[c_t], visited):
+            if x_t +dir_x[c_t] == place_hodler_x and y_t +dir_y[c_t] == place_hodler_y:
+                ciekawe +=1
+            if ciekawe > 10:
+                rany[(place_hodler_y, place_hodler_x)] = 1
+                visited[place_hodler_y][place_hodler_x] = NEW_OBSTRUCTION
+                return rany
             c_t = (c_t + 1) % 4
             continue
         # while is_next_move_blocking(y_t,x_t,dir_y[c_t],dir_x[c_t], visited):
@@ -120,15 +123,22 @@ def test_obstruction(x_t, y_t, x_start, y_start, c_t, dir_x, dir_y, area_p, visi
         #     visited[place_hodler_y][place_hodler_x] = CROSS
         #     return False
         #print(f"Ohh, no! {x_t}, {y_t}, {y_start}, {x_start}")
-        value = occurence.get((x_t, y_t))
-        if value is not None:
-            occurence[(x_t, y_t)] +=1
-            if occurence.get((x_t, y_t)) > 4:
-                rany[(place_hodler_y, place_hodler_x)] = 1
-                visited[place_hodler_y][place_hodler_x] = NEW_OBSTRUCTION
-                return rany
-        else:
-            occurence[(x_t, y_t)] = 1
+        # value = occurence.get((x_t, y_t))
+        # if value is not None:
+        #     occurence[(x_t, y_t)]+=1
+        #     if occurence[(x_t, y_t)] > 4:
+        #         rany[(place_hodler_y, place_hodler_x)] = 1
+        #         visited[place_hodler_y][place_hodler_x] = NEW_OBSTRUCTION
+        #         return rany
+        #     # if occurence.get((x_t, y_t)) > 25:
+        #     #     if ciekawe > 20:
+        #     #         rany[(place_hodler_y, place_hodler_x)] = 1
+        #     #         visited[place_hodler_y][place_hodler_x] = NEW_OBSTRUCTION
+        #     #     else:
+        #     #         visited[place_hodler_y][place_hodler_x] = CROSS
+        #     #     return rany
+        # else:
+        #     occurence[(x_t, y_t)] = 0
         
         x_t += dir_x[c_t]
         y_t += dir_y[c_t]
@@ -199,7 +209,10 @@ def find_loops(start_x, start_y, x, y, dir_x, dir_y, area) -> list[list[str]]:
 
     rany = dict()
 
-    while(in_bounds(x, y, len(area[0]), len(area))):
+    while(in_bounds(x + dir_x[current_dir], y + dir_y[current_dir], len(area[0]), len(area))):
+        while is_next_move_blocking(y,x,dir_y[current_dir],dir_x[current_dir], visited):
+            current_dir = (current_dir + 1) % 4
+            continue
         # if not in_bounds(x + dir_x[current_dir], y + dir_y[current_dir], len(area[0]), len(area)):
         #     break
 
@@ -227,13 +240,13 @@ def find_loops(start_x, start_y, x, y, dir_x, dir_y, area) -> list[list[str]]:
         # else:
         #     return None
 
-        # Next moves
-        if not in_bounds(x + dir_x[current_dir], y + dir_y[current_dir], len(visited[0]), len(visited)):
-            #print("Apple")
-            break
-        if is_next_move_blocking(y,x,dir_y[current_dir],dir_x[current_dir], visited):
-            current_dir = (current_dir + 1) % 4
-            continue
+        # # Next moves
+        # if not in_bounds(x + dir_x[current_dir], y + dir_y[current_dir], len(visited[0]), len(visited)):
+        #     #print("Apple")
+        #     break
+        # if is_next_move_blocking(y,x,dir_y[current_dir],dir_x[current_dir], visited):
+        #     current_dir = (current_dir + 1) % 4
+        #     continue
             
 
         # n_c_t = turn(y_t, x_t, c_t, c_t, dir_y, dir_x, visited)
@@ -272,8 +285,6 @@ def find_loops(start_x, start_y, x, y, dir_x, dir_y, area) -> list[list[str]]:
         # y += dir_y[current_dir]
         x += dir_x[current_dir]
         y += dir_y[current_dir]
-
-    print(len(rany))
     
     return visited
 
@@ -295,12 +306,41 @@ def main():
 
 
     looped = find_loops(x, y, x, y, dir_x, dir_y, visited_to_check)
+    result = 0
 
     with open("result1.txt", "w") as f:
         for line in looped:
             for char in line:
+                if char == NEW_OBSTRUCTION:
+                    result += 1
                 f.write(char)
             f.write("\n")
+
+    print(result)
+
+    area1 = []
+
+    with open("../data_long.txt", "r") as f:
+        for line in f.readlines():
+            newline_split = line.split("\n")
+            area1.append(re.findall("[.#^]{1}", newline_split[0]))
+
+    y1, x1 = find_starting_point(area1)
+    visited_to_check1 = fill_occurence_table(x1, y1, dir_x, dir_y, area1)
+
+
+    looped1 = find_loops(x1, y1, x1, y1, dir_x, dir_y, visited_to_check1)
+    result1 = 0
+
+    with open("result1.txt", "w") as f:
+        for line in looped1:
+            for char in line:
+                if char == NEW_OBSTRUCTION:
+                    result1 += 1
+                f.write(char)
+            f.write("\n")
+            
+    print(result1)
 
 
 if __name__ == "__main__":
