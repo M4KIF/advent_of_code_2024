@@ -1,18 +1,24 @@
 package solution
 
 import (
+	"os"
 	"testing"
 
-	icrud "github.com/M4KIF/advent_of_code_2024/middleware/go/interfaces/file"
 	"github.com/stretchr/testify/assert"
 )
+
+type IoMock struct{}
+
+func (io *IoMock) Open(s string) (*os.File, error) {
+	return nil, nil
+}
 
 type DataMock struct {
 	FirstArray  []int
 	SecondArray []int
 }
 
-func (d DataMock) TakeInput(path string, file_io icrud.CRUD) bool {
+func (d DataMock) TakeInput(path string) bool {
 	return true
 }
 
@@ -25,16 +31,15 @@ func (d DataMock) GetSecondArray() []int {
 }
 
 func TestSolutionWithSmallInputNoRepetition(t *testing.T) {
-
 	// Mocking the data with precalculated source of truth
 	left := []int{1, 2, 4, 5}
 	right := []int{1, 1, 1, 1, 2, 5, 5, 5}
 	expected_result := 21
 
-	data := DataMock{FirstArray: left, SecondArray: right}
+	//data := DataMock{FirstArray: left, SecondArray: right}
 
-	solution := Solution{}
-	assert.Equal(t, expected_result, solution.Solve(data))
+	solution := Solution{DataMock{FirstArray: left, SecondArray: right}}
+	assert.Equal(t, expected_result, solution.Solve("path"))
 
 }
 
@@ -45,9 +50,7 @@ func TestSolutionWithSmallInputWithRepetition(t *testing.T) {
 	right := []int{1, 1, 1, 1, 2, 5, 5, 5}
 	expected_result := 40
 
-	data := DataMock{FirstArray: left, SecondArray: right}
-
-	solution := Solution{}
-	assert.Equal(t, expected_result, solution.Solve(data))
+	solution := Solution{DataMock{FirstArray: left, SecondArray: right}}
+	assert.Equal(t, expected_result, solution.Solve("path"))
 
 }

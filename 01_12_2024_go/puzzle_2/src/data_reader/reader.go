@@ -12,11 +12,16 @@ import (
 type PuzzleTwoData struct {
 	LeftArray  []int
 	RightArray []int
+	IO         icrud.CRUD
 }
 
-func (d *PuzzleTwoData) TakeInput(path string, file_io icrud.CRUD) bool {
+func Create(io icrud.CRUD) *PuzzleTwoData {
+	return &PuzzleTwoData{IO: io}
+}
+
+func (d *PuzzleTwoData) TakeInput(path string) bool {
 	// Creating the absolute path and opening the file
-	file, e := file_io.Open(path)
+	file, e := d.IO.Open(path)
 
 	if e != nil {
 		logging.Error("Error occured while opening the file", "errors", e.Error())
@@ -79,8 +84,4 @@ func (d *PuzzleTwoData) GetFirstArray() []int {
 
 func (d *PuzzleTwoData) GetSecondArray() []int {
 	return d.RightArray
-}
-
-func Create() *PuzzleTwoData {
-	return &PuzzleTwoData{}
 }

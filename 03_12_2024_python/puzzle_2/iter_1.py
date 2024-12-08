@@ -9,7 +9,7 @@ def solve():
         # needed regexes
         mulRegex = "mul[(][0-9]{1,3},[0-9]{1,3}[)]"
         doRegex = "do[(][)]"
-        dontRegex = "don't[(][)]"
+        dontRegex = "d on't[(][)]"
         numRegex = "\d+"
 
         # patterns

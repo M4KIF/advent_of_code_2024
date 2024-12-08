@@ -1,4 +1,4 @@
-package sollution
+package solution
 
 import (
 	"math"
@@ -7,9 +7,9 @@ import (
 	"github.com/M4KIF/advent_of_code_2024/01_12_2024_go/puzzle_1/src/io"
 )
 
-type Sollution struct{}
+type Solution struct{}
 
-func (s *Sollution) Solve(data io.Data) int {
+func (s *Solution) Solve(data io.Data) int {
 	result := 0
 
 	// Taking pointers into variables for readability
