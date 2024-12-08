@@ -1,24 +1,25 @@
 package solution
 
 import (
-	"github.com/M4KIF/advent_of_code_2024/middleware/go/file_handling"
 	interfaces "github.com/M4KIF/advent_of_code_2024/middleware/go/interfaces/data"
 )
 
-type Solution struct{}
+type Solution struct {
+	DataProvider interfaces.TwoIntArrays
+}
 
-func (s *Solution) Solve(data interfaces.TwoIntArrays) int {
-	// Utilising a default file handling provider
-	file_io := file_handling.Default{}
+func NewSolution(dataProvider interfaces.TwoIntArrays) *Solution {
+	return &Solution{dataProvider}
+}
 
-	// Collecting the input data
-	data.TakeInput("/input_data/data.txt", file_io)
+func (s *Solution) Solve(path string) int {
+	s.DataProvider.TakeInput(path)
 
 	result := 0
 
 	// Taking pointers into variables for readability
-	left := data.GetFirstArray()
-	right := data.GetSecondArray()
+	left := s.DataProvider.GetFirstArray()
+	right := s.DataProvider.GetSecondArray()
 
 	memo := map[int]int{}
 
