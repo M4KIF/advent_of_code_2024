@@ -37,7 +37,6 @@ func (d *DataProvider) TakeInput(path string) bool {
 		s := strings.Split(scanner.Text(), ":")
 
 		// If there indeed was a colon
-		logging.Info("Read", "el", s)
 		if len(s) > 1 {
 			conv_result, _ := strconv.Atoi(s[0])
 			d.ExpectedResults = append(d.ExpectedResults, conv_result)
@@ -54,8 +53,8 @@ func (d *DataProvider) TakeInput(path string) bool {
 
 	d.Elements = append(d.Elements, temp)
 
-	logging.Info("Used data", "expected_results", d.ExpectedResults,
-		"elements", d.Elements)
+	// logging.Info("Used data", "expected_results", d.ExpectedResults,
+	// 	"elements", d.Elements)
 
 	if e := scanner.Err(); e != nil {
 		logging.Error("Errors occured while scanning", "errors", e.Error())
