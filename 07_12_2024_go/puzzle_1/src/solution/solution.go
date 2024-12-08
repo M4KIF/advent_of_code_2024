@@ -20,19 +20,19 @@ func NewSolution(dataProvider interfaces.SingleDimIntTwoDimIntArrays, path strin
 	return sol
 }
 
-func (s *Solution) operSubsets(res *[][]string, oper []string, n int, curr []string) {
+func (s *Solution) Permutations(res *[]string, oper []string, temp string, lenght int) {
 
-	if len(curr) == n {
-		*res = append(*res, curr)
+	if len(temp) == lenght {
+		*res = append((*res), temp)
 		return
 	}
 
-	for i := range len(oper) {
-		curr = append(curr, oper[i])
+	for i := 0; i < 2; i++ {
+		temp += oper[i%2]
 
-		s.operSubsets(res, oper, n, curr)
+		s.Permutations(res, oper, temp, lenght)
 
-		curr = curr[:len(curr)-1]
+		temp = temp[:len(temp)-1]
 	}
 }
 
@@ -40,25 +40,26 @@ func (s *Solution) Solve() int {
 
 	results := s.DataProvider.GetFirstArray()
 	elements := s.DataProvider.GetSecondArray()
-	operators := []string{"+", "*"}
+	//operators := []string{"+", "*"}
 
 	result := 0
 	for i, r := range results {
 		// Calculating the subsets of operators that can be used for this problem
-		subsets := [][]string{}
-		subset := []string{}
+		subsets := []string{}
+		operators := []string{"*", "+"}
+		subset := ""
 
-		s.operSubsets(&subsets, operators, len(elements[i])-1, subset)
-		logging.Info("Subsets that were calculated out of the given data", "subs", subsets, "result", r)
+		s.Permutations(&subsets, operators, subset, len(elements[i])-1)
+		logging.Info("Permutations that were calculated out of the given data", "subs", subsets, "result", r, "elements", elements[i], "len", len(elements[i])-1)
 
 		for _, ss := range subsets {
 			// Iterating over all subsets in search of a true line
 			temp_result := elements[i][0]
 
-			for j, o := range ss {
-				if o == ADDITION {
+			for j, _ := range ss {
+				if string(ss[j]) == ADDITION {
 					temp_result += elements[i][1+j]
-				} else if o == MULTIPLICATION {
+				} else if string(ss[j]) == MULTIPLICATION {
 					temp_result *= elements[i][1+j]
 				}
 			}
