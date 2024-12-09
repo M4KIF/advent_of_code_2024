@@ -2,6 +2,8 @@ package org.puzzle_1;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assertions;
+import org.src.Puzzle;
+
 import java.lang.NullPointerException;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,19 +12,19 @@ public class PuzzleOneTest {
 
     @Test
     void TestInstantiatingPuzzleOneWrongPath() {
-        Assertions.assertThrows(NullPointerException.class, () -> {new PuzzleOne(".;'dgdsfg;'dsfds");});
+        Assertions.assertThrows(NullPointerException.class, () -> {new Puzzle(".;'dgdsfg;'dsfds");});
     }
 
     @Test
     void TestInstantiatingPuzzleDataSmallValiditySizeCheck() {
-        PuzzleOne testObj = new PuzzleOne("/data_small.txt");
+        Puzzle testObj = new Puzzle("/data_small.txt");
 
         Assertions.assertEquals( 144, testObj.getMap().size());
     }
 
     @Test
     void TestInstantiatingPuzzleDataSmallValidityContentCheck() {
-        PuzzleOne testObj = new PuzzleOne("/data_small.txt");
+        Puzzle testObj = new Puzzle("/data_small.txt");
 
         ArrayList<Integer> knownZeroPos = new ArrayList<>();
         knownZeroPos.add(1);
@@ -43,7 +45,7 @@ public class PuzzleOneTest {
 
     @Test
     void TestInstantiatingPuzzleDataFinalQuasiValiditySizeCheck() {
-        PuzzleOne testObj = new PuzzleOne("/data_final.txt");
+        Puzzle testObj = new Puzzle("/data_final.txt");
 
         System.out.println("Real size of the input: " + testObj.getMap().size());
         Assertions.assertNotEquals( 144, testObj.getMap().size());
@@ -51,7 +53,7 @@ public class PuzzleOneTest {
 
     @Test
     void TestRetrieveTowerLocations() {
-        PuzzleOne testObj = new PuzzleOne("/data_small.txt");
+        Puzzle testObj = new Puzzle("/data_small.txt");
         List<List<Integer>> points = testObj.RetrieveTowerLocations("A");
 
         Assertions.assertEquals(3, points.size());
@@ -81,7 +83,7 @@ public class PuzzleOneTest {
         points.add(point_3);
 
         // Main test body
-        PuzzleOne testObj = new PuzzleOne("");
+        Puzzle testObj = new Puzzle("");
         var result = testObj.CombinationsFromPointsArray(points);
 
         System.out.println("The combinations received: " + result);
@@ -98,7 +100,7 @@ public class PuzzleOneTest {
 
     @Test
     void TestIntegrationRetrieveTowerLocationsAndCreateSubsets() {
-        PuzzleOne testObj = new PuzzleOne("/data_small.txt");
+        Puzzle testObj = new Puzzle("/data_small.txt");
         List<List<Integer>> points = testObj.RetrieveTowerLocations("A");
 
         Assertions.assertEquals(3, points.size());
@@ -112,7 +114,7 @@ public class PuzzleOneTest {
 
     @Test
     void TestPuzzleTowerDistanceCalc() {
-        PuzzleOne testObj = new PuzzleOne("/data_small.txt");
+        Puzzle testObj = new Puzzle("/data_small.txt");
 
         System.out.println(testObj.getMap());
 
@@ -142,7 +144,7 @@ public class PuzzleOneTest {
 
     @Test
     void TestPuzzlePart1Solution() {
-        PuzzleOne testObj = new PuzzleOne("/data_3a.txt");
+        Puzzle testObj = new Puzzle("/data_3a.txt");
 
         System.out.println(testObj.getMap());
 
@@ -152,7 +154,7 @@ public class PuzzleOneTest {
 
     @Test
     void TestIntegrationRetrieveTowerLocationsAndCreateSubsets3a() {
-        PuzzleOne testObj = new PuzzleOne("/data_3a.txt");
+        Puzzle testObj = new Puzzle("/data_3a.txt");
         System.out.println("Whole map: " + testObj.getMap());
         List<List<Integer>> points = testObj.RetrieveTowerLocations("a");
 

@@ -1,4 +1,4 @@
-package org.puzzle_1;
+package org.src;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 
 @Getter
 @Setter
-public class PuzzleOne {
+public class Puzzle {
 
     // Used path
     private String path;
@@ -37,12 +37,12 @@ public class PuzzleOne {
         }
     }
 
-    public PuzzleOne(String filePath) {
+    public Puzzle(String filePath) {
         this.path = filePath;
         this.map = new HashMap<>();
 
         // Reading the input
-        try (var in = PuzzleOne.class.getResourceAsStream(this.path)) {
+        try (var in = Puzzle.class.getResourceAsStream(this.path)) {
             // For easier map creation
             AtomicInteger row = new AtomicInteger(0);
             AtomicInteger col = new AtomicInteger(0);
@@ -54,7 +54,6 @@ public class PuzzleOne {
             while (myReader.hasNextLine()) {
                 String line = myReader.nextLine();
                 String[] split = line.split("");
-                System.out.println(split.length);
 
                 Map<ArrayList<Integer>, ArrayList<String>> lineData =
                         Stream.of(split).map(s -> {
@@ -93,11 +92,17 @@ public class PuzzleOne {
         }
     }
 
-    public List<String> RetrievePossibleFrequencyList() {
+    /*
+    *
+    * PRIMER: Setting the data on the right tracks for for further calculations at both levels
+    *
+     */
+
+    public Set<String> RetrievePossibleFrequencyList() {
         return this.map.values().stream().
                 flatMap(Collection::stream).
                 filter(s -> !Objects.equals(s, "#") && !Objects.equals(s, ".")).
-                collect(Collectors.toList());
+                collect(Collectors.toSet());
     }
 
     public List<List<Integer>> RetrieveTowerLocations(String frequency) {
@@ -106,6 +111,12 @@ public class PuzzleOne {
                 map(e -> e.getKey()).
                 collect(Collectors.toList());
     }
+
+    /*
+     *
+     *  PART 1
+     *
+     */
 
     private void combinationsHelper(
             List<List<List<Integer>>> combinations,
@@ -174,7 +185,6 @@ public class PuzzleOne {
         antinode.add(y_first + y_delta);
         antinode.add(x_first + x_delta);
 
-        System.out.println("First point: " + first + " second: " + second + " result: " + antinode);
         return antinode;
     }
 
@@ -199,9 +209,134 @@ public class PuzzleOne {
                 forEachOrdered(partial_result -> partial_result.stream().
                         forEachOrdered(entry -> this.map.get(entry).add("#")));
 
-        System.out.println(this.map);
         return this.map.entrySet().stream().
                 filter(e -> e.getValue().contains("#")).
                 collect(Collectors.toList()).size();
+    }
+
+    /*
+    *
+    *  PART 2: Adding the exclusive combinations of 2 between the 'frequency' towers to the Part1 result
+    *
+     */
+
+    // Recursive algorithm for nonrepetitive combinations
+    private void combinationsExclusiveHelper(
+            List<List<List<Integer>>> combinations,
+            List<List<Integer>> points,
+            List<List<Integer>> current,
+            int index) {
+
+        // Base case if we'have a pair of points
+        if (current.size() == 2) {
+            List<List<Integer>> temp = new ArrayList<>(current);
+            combinations.add(temp);
+            return;
+        }
+
+        for(int i = index; i < points.size(); i++) {
+
+            // Append to the current
+            current.add(points.get(i));
+
+            // Run recursion
+            combinationsExclusiveHelper(combinations, points, current, ++index);
+
+            // Remove the previously added
+            current.removeLast();
+        }
+    }
+
+    public List<List<List<Integer>>> CombinationsExclusiveFromPointsArray(List<List<Integer>> points) {
+        List<List<List<Integer>>> combinations = new ArrayList<>();
+        List<List<Integer>> current = new ArrayList<>();
+
+        combinationsExclusiveHelper(combinations, points, current, 0);
+
+        return combinations;
+    }
+
+    public List<List<Integer>> CreateResonantAntinodes(List<Integer> first, List<Integer> second) {
+
+        List<List<Integer>> antinodes = new ArrayList<>();
+
+        // Values that will get used for modification of the coordinates
+        var x_delta = Math.abs(first.getLast() - second.getLast());
+        var y_delta = Math.abs(first.getFirst() - second.getFirst());
+
+        // New point containing an antinode
+        List<Integer> antinode = new ArrayList<>();
+
+        // Comparing the X coordinates
+        var x_first = first.getLast();
+        var x_second = second.getLast();
+
+        if (x_first < x_second) {
+            x_delta *= -1;
+        }
+
+        // Comparing the Y coordinates
+        // also, the deciding step
+        // on which point to modify
+        var y_first = first.getFirst();
+        var y_second = second.getFirst();
+
+        if (y_first < y_second) {
+            y_delta *= -1;
+        }
+
+        antinode.add(y_first + y_delta);
+        antinode.add(x_first + x_delta);
+
+        // Multiplying the first antinode till non contained in the map
+        while(this.map.containsKey(antinode)) {
+            antinodes.add(new ArrayList<>(antinode));
+
+            var y = antinode.getFirst();
+            var x = antinode.getLast();
+
+            antinode.clear();
+
+            antinode.add(y + y_delta);
+            antinode.add(x + x_delta);
+        }
+
+        return antinodes;
+    }
+
+    public Set<List<Integer>> CalculateResonantAntinodePositions(List<List<List<Integer>>> pairs) {
+
+        PointExcludor excluding = new PointExcludor();
+        return pairs.stream().
+                filter(p -> { return excluding.compare(p.getFirst(), p.getLast()) != 0; }).
+                map(p -> CreateResonantAntinodes(p.getFirst(), p.getLast())).
+                flatMap(Collection::stream).
+                collect(Collectors.toSet());
+    }
+
+    public int SolvePart2() {
+        AtomicInteger result = new AtomicInteger(0);
+
+        // Retrieving all of the possible frequencies
+        RetrievePossibleFrequencyList().stream().
+                map(frequency -> RetrieveTowerLocations(frequency)).
+                map(locations -> {
+                    // Nordic Combined. Adding the exclusive combinations of two towers.
+                    // *It is a joke in Poland when something is overcomplicated
+                    CombinationsExclusiveFromPointsArray(locations).stream().forEachOrdered(
+                            exclusive_antinodes -> exclusive_antinodes.
+                                    stream().
+                                    forEachOrdered(entry -> this.map.get(entry).add("#"))
+                    );
+
+                    return CombinationsFromPointsArray(locations);
+                }).
+                map(pairs -> CalculateResonantAntinodePositions(pairs)).
+                forEachOrdered(partial_result -> partial_result.stream().
+                        forEachOrdered(entry -> this.map.get(entry).add("#")));
+
+        return this.map.entrySet().stream().
+                filter(e -> e.getValue().contains("#")).
+                collect(Collectors.toList()).size() + result.get();
     }
 }
