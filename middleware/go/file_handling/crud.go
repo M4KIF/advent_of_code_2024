@@ -35,3 +35,14 @@ func (d Default) Open(relativePath string) (*os.File, error) {
 		return file, nil
 	}
 }
+
+type Test struct{}
+
+func (d Test) Open(relativePath string) (*os.File, error) {
+	// Opening the file with relative path
+	if file, e := os.Open(relativePath); e != nil {
+		return nil, e
+	} else {
+		return file, nil
+	}
+}
