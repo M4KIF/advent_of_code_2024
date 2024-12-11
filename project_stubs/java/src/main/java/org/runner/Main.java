@@ -1,18 +1,15 @@
 package org.runner;
 
-import org.puzzle_1.PuzzleOne;
-import org.puzzle_2.PuzzleTwo;
+import org.src.Puzzle;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
 
-        var p1 = new PuzzleOne();
-        var p2 = new PuzzleTwo();
+        Puzzle part_1 = new Puzzle("/data_final.txt");
 
-        System.out.print("Result one: " + p1.solve_first() + "\n");
-        System.out.print("Result oneandahielve: " + p2.solve_one_and_a_half() + "\n");
-        System.out.print("Result two: " + p2.solve_second());
+        System.out.println("Part 1 result: " + part_1.SolvePart1());
+        System.out.println("Part 2 results: " + part_1.SolvePart2());
     }
 }
