@@ -68,6 +68,10 @@ func (s *Solution) path_find_greedy_part_1(paths map[string]int, area [][]int, p
 	return false
 }
 
+func (s *Solution) searching_for_a_better_sollution() int {
+	return 1
+}
+
 func (s *Solution) Part1() int {
 	height_map := s.DataProvider.Get2DArray()
 	// So, by having a big height map
