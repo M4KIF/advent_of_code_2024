@@ -17,7 +17,7 @@ func TestIntegrationSolutionWithFileProvidingCapab(t *testing.T) {
 
 	testSolution := NewSolution(dp, path)
 
-	assert.Equal(t, testSolution.Solve(), 1)
+	assert.Equal(t, testSolution.Part1(), 1)
 	assert.NotNil(t, testSolution.DataProvider.Get2DArray())
 }
 
@@ -30,12 +30,10 @@ func TestIntegMethodHelper(t *testing.T) {
 
 	testSolution := NewSolution(dp, path)
 
-	testSolution.DataProvider.TakeInput(path)
-
-	assert.Equal(t, testSolution.helper(), 1)
+	assert.Equal(t, testSolution.Part1(), 1)
 }
 
-func TestSolveExampleData(t *testing.T) {
+func TestPart1ExampleData(t *testing.T) {
 
 	path := "./test_data/test_data_2.txt"
 
@@ -44,7 +42,17 @@ func TestSolveExampleData(t *testing.T) {
 
 	testSolution := NewSolution(dp, path)
 
-	testSolution.DataProvider.TakeInput(path)
+	assert.Equal(t, testSolution.Part1(), 36)
+}
 
-	assert.Equal(t, testSolution.helper(), 36)
+func TestPart2ExampleData(t *testing.T) {
+
+	path := "./test_data/test_data_2.txt"
+
+	io_provider := file_handling.Test{}
+	dp := data_provider.NewDataProvider(io_provider)
+
+	testSolution := NewSolution(dp, path)
+
+	assert.Equal(t, 81, testSolution.Part2())
 }

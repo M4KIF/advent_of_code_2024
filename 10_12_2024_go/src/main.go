@@ -12,5 +12,6 @@ func main() {
 	dp := data_provider.NewDataProvider(io_provider)
 
 	solution := solution.NewSolution(dp, "/data.txt")
-	logging.Info("Part1 result", "value", solution.Solve())
+	logging.Info("Part1 result", "value", solution.Part1())
+	logging.Info("Part1 result", "value", solution.Part2())
 }
