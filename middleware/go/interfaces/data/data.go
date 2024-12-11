@@ -16,3 +16,8 @@ type SingleDimIntTwoDimIntArrays interface {
 	GetFirstArray() []int
 	GetSecondArray() [][]int
 }
+
+type Int2DArray interface {
+	TakeInput(string) bool
+	Get2DArray() [][]int
+}
