@@ -74,3 +74,42 @@ func (s *Solution) Part1() int {
 
 	return tokens
 }
+
+func (s *Solution) calculateClicksCorrectedA(data []int, b float64) float64 {
+	return (float64(data[4]+10000000000000)/float64(data[0]) - b*(float64(data[2])/float64(data[0])))
+}
+
+func (s *Solution) calculateClicksCorrectedB(data []int) float64 {
+	return ((float64(data[5]+10000000000000)*float64(data[0]) - float64(data[4]+10000000000000)*float64(data[1])) /
+		(float64(data[3])*float64(data[0]) - float64(data[2])*float64(data[1])))
+}
+
+func (s *Solution) Part2() int {
+	tokens := 0
+
+	// Calculating
+	data := s.DataProvider.Get2DArray()
+	for _, game := range data {
+
+		// Each game calculation begins with calculating the amount of B moves
+		clicks_B := s.calculateClicksCorrectedB(game)
+		if int(math.Round(clicks_B)) < 0 {
+			//fmt.Println(i, "B less than 0", "value", clicks_B)
+			continue
+		} else if math.Abs(math.Round(clicks_B)-clicks_B) > float64(0.01) {
+			//fmt.Println(i, " B Not an integer", "diff", math.Round(clicks_B)-clicks_B, "val", clicks_B)
+			continue
+		}
+
+		clicks_A := s.calculateClicksCorrectedA(game, clicks_B)
+		if int(math.Round(clicks_A)) < 0 {
+			continue
+		} else if math.Abs(math.Round(clicks_A)-clicks_A) > float64(0.06) {
+			continue
+		}
+
+		tokens += int(math.Round(clicks_A))*A_CLICK_COST + int(math.Round(clicks_B))*B_CLICK_COST
+	}
+
+	return tokens
+}

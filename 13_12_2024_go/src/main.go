@@ -14,4 +14,5 @@ func main() {
 	solution := solution.NewSolution(provider, "/data.txt")
 
 	logging.Info("Result for part 1", "value", solution.Part1())
+	logging.Info("Result for part 2", "value", solution.Part2())
 }
