@@ -5,23 +5,20 @@ import (
 )
 
 type Solution struct {
-	DataProvider interfaces.String2DArray
+	DataProvider interfaces.Int2DArray
+	Path         string
 }
 
-func NewSolution(dataProvider interfaces.String2DArray) *Solution {
-	return &Solution{DataProvider: dataProvider}
+func NewSolution(dataProvider interfaces.Int2DArray, path string) *Solution {
+	sol := &Solution{DataProvider: dataProvider, Path: path}
+	sol.DataProvider.TakeInput(path)
+	return sol
 }
 
-func helper(d [][]string) int {
+func (s *Solution) Part1() int {
 	return 1
 }
 
-func (s *Solution) Solve() int {
-	// Collecting the data
-	s.DataProvider.TakeInput("")
-
-	// Calculating
-	data := s.DataProvider.Get2DArray()
-
-	return helper(data)
+func (s *Solution) Part2() int {
+	return 1
 }
