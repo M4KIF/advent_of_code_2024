@@ -21,3 +21,9 @@ type Int2DArray interface {
 	TakeInput(string) bool
 	Get2DArray() [][]int
 }
+
+type String2Dand1Darray interface {
+	TakeInput(string) bool
+	GetArea() [][]string
+	GetCommands() []string
+}
