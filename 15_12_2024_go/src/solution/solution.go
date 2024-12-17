@@ -986,13 +986,84 @@ func (s *Stack[T]) Pop() T {
 	return point
 }
 
-func (s *Solution) FloodFillTheYaxis(area [][]string, points *[][]int, stack *Stack[[]int]) {
-	fmt.Println("Stack length: ", len(stack.items), " contents", stack.items)
+func (s *Solution) IsInBoxesGroup(area [][]string, y, x, starting_y int, dir string) bool {
+
+	if dir == C_DOWN {
+		if y <= starting_y {
+			return false
+		}
+		if area[y][x] == BOX_LEFT && area[y+1][x] == BOX_LEFT ||
+			area[y][x] == BOX_RIGHT && area[y+1][x] == BOX_RIGHT {
+			return true
+		}
+
+		// Halfstacking down-movement
+		if area[y][x] == BOX_LEFT && area[y-1][x+1] == BOX_LEFT ||
+			area[y][x] == BOX_RIGHT && area[y-1][x] == BOX_LEFT ||
+			area[y][x] == BOX_RIGHT && area[y-1][x-1] == BOX_RIGHT ||
+			area[y][x] == BOX_LEFT && area[y-1][x] == BOX_RIGHT {
+			return true
+		}
+	}
+
+	if dir == C_TOP {
+		if y >= starting_y {
+			return false
+		}
+
+		if area[y][x] == BOX_LEFT && area[y-1][x] == BOX_LEFT ||
+			area[y][x] == BOX_RIGHT && area[y-1][x] == BOX_RIGHT {
+			return true
+		}
+
+		// Halfstacking up-movement
+		if area[y][x] == BOX_LEFT && area[y+1][x-1] == BOX_LEFT ||
+			area[y][x] == BOX_LEFT && area[y+1][x] == BOX_RIGHT ||
+			area[y][x] == BOX_RIGHT && area[y+1][x+1] == BOX_RIGHT ||
+			area[y][x] == BOX_RIGHT && area[y+1][x] == BOX_LEFT {
+			return true
+		}
+	}
+
+	// // Up down columns, without half-stacking
+	// if area[y][x] == BOX_LEFT && area[y-1][x] == BOX_LEFT ||
+	// 	area[y][x] == BOX_RIGHT && area[y-1][x] == BOX_RIGHT ||
+	// 	area[y][x] == BOX_LEFT && area[y+1][x] == BOX_LEFT ||
+	// 	area[y][x] == BOX_RIGHT && area[y+1][x] == BOX_RIGHT {
+	// 	return true
+	// }
+
+	// // Halfstacking down-movement
+	// if area[y][x] == BOX_LEFT && area[y-1][x+1] == BOX_LEFT ||
+	// 	area[y][x] == BOX_RIGHT && area[y-1][x] == BOX_LEFT ||
+	// 	area[y][x] == BOX_RIGHT && area[y-1][x-1] == BOX_RIGHT ||
+	// 	area[y][x] == BOX_LEFT && area[y-1][x] == BOX_RIGHT {
+	// 	return true
+	// }
+
+	// // Halfstacking up-movement
+	// if area[y][x] == BOX_LEFT && area[y+1][x-1] == BOX_LEFT ||
+	// 	area[y][x] == BOX_LEFT && area[y+1][x] == BOX_RIGHT ||
+	// 	area[y][x] == BOX_RIGHT && area[y+1][x+1] == BOX_RIGHT ||
+	// 	area[y][x] == BOX_RIGHT && area[y+1][x] == BOX_LEFT {
+	// 	return true
+	// }
+
+	// Closing
+	if area[y][x] == BOX_LEFT && area[y][x+1] == BOX_RIGHT ||
+		area[y][x] == BOX_RIGHT && area[y][x-1] == BOX_LEFT {
+		return true
+	}
+	return false
+}
+
+func (s *Solution) FloodFillTheYaxis(area [][]string, points *[][]int, stack *Stack[[]int], dir string, s_y int) {
+	//fmt.Println("Stack length: ", len(stack.items), " contents", stack.items)
 	if !stack.IsEmpty() {
 		p := stack.Pop()
-		fmt.Println("PROBA 1", p, " ", area[p[0]][p[1]])
+		//fmt.Println("PROBA 1", p, " ", area[p[0]][p[1]])
 
-		if area[p[0]][p[1]] == BOX_LEFT || area[p[0]][p[1]] == BOX_RIGHT {
+		if s.IsInBoxesGroup(area, p[0], p[1], s_y, dir) {
 			if !slices.ContainsFunc((*points), func(checked []int) bool {
 				if checked[0] == p[0] && checked[1] == p[1] {
 					return true
@@ -1001,17 +1072,23 @@ func (s *Solution) FloodFillTheYaxis(area [][]string, points *[][]int, stack *St
 			}) {
 				(*points) = append((*points), p)
 			}
-			fmt.Println("PROBA 2", (*points))
+			//fmt.Println("PROBA 2", (*points))
 		} else {
 			return
 		}
 
 		for i := 0; i < 4; i++ {
+			// if dir == C_TOP && i == I_DOWN {
+			// 	continue
+			// }
+			// if dir == C_DOWN && i == I_TOP {
+			// 	continue
+			// }
 			n_y := p[0] + movement_y[i]
 			n_x := p[1] + movement_x[i]
 
 			if s.IsPointSafe(area, n_y, n_x) {
-				fmt.Println("PROBA 3", n_y, " ", n_x)
+				//fmt.Println("PROBA 3", n_y, " ", n_x)
 				if area[n_y][n_x] == BOX_LEFT || area[n_y][n_x] == BOX_RIGHT {
 					if !slices.ContainsFunc((*points), func(checked []int) bool {
 						if checked[0] == n_y && checked[1] == n_x {
@@ -1024,7 +1101,7 @@ func (s *Solution) FloodFillTheYaxis(area [][]string, points *[][]int, stack *St
 				}
 			}
 		}
-		s.FloodFillTheYaxis(area, points, stack)
+		s.FloodFillTheYaxis(area, points, stack, dir, s_y)
 	}
 }
 
@@ -1048,90 +1125,136 @@ func (s *Solution) PushAxisYpart2(area [][]string, d string) [][]string {
 			return area
 		}
 
-		fmt.Println("TESTING @ZE IDEA")
+		//fmt.Println("TESTING @ZE IDEA")
 		points := [][]int{}
 		stack := Stack[[]int]{}
 		stack.Push([]int{y + movement_y[I_TOP], x})
-		s.FloodFillTheYaxis(area, &points, &stack)
-		fmt.Println(points)
+		s.FloodFillTheYaxis(area, &points, &stack, C_TOP, y)
+		//fmt.Println("Len points", len(points))
+
+		if len(points) == 0 {
+			area[y][x] = BLANK
+			area[y+movement_y[I_TOP]][x] = ROBOT
+			return area
+		}
 
 		slices.SortFunc(points, func(f []int, s []int) int {
-			if f[0] > s[1] {
-				return 1
+			if f[0] < s[0] {
+				return -1
 			}
-			return -1
+			return 1
 		})
 
-		// Convert to a vertical slice. TOP-DOWN
-		vertical_line := ""
-		for _, line := range area {
-			vertical_line += line[x]
-		}
+		for _, p := range points {
+			//fmt.Println("Point", "(", p[0], ",", p[1], ")", " ", area[p[0]][p[1]])
 
-		boxesMatch, _ := regexp.Compile(`[\[\]]+`)
-		boxes := boxesMatch.FindAllString(vertical_line, -1)
-		indexes := boxesMatch.FindAllStringIndex(vertical_line, -1)
-
-		// Filtering the indexes with garbage collection
-		filter := indexes[:0]
-		filtered_boxes := boxes[:0]
-
-		for i, candidate := range indexes {
-			if candidate[1] <= y {
-				filter = append(filter, candidate)
-				filtered_boxes = append(filtered_boxes, boxes[i])
+			if area[p[0]-1][p[1]] == WALL {
+				// Wypierdalać
+				//fmt.Println("Wypuerdalac")
+				return area
 			}
 		}
 
-		for i := len(filter); i < len(indexes); i++ {
-			indexes[i] = nil // or the zero value of T
+		//Swapping the point according to the sequence in the array
+		swapping := Stack[string]{}
+
+		for _, p := range points {
+			swapping.Push(area[p[0]-1][p[1]])
+			area[p[0]-1][p[1]] = area[p[0]][p[1]]
+			area[p[0]][p[1]] = swapping.Pop()
 		}
+		area[y-1][x] = ROBOT
+		area[y][x] = BLANK
 
-		// If all of the boxes are on the opposite side, move and fajrant
-		if len(filter) == 0 {
-			area[y][x] = BLANK
-			area[y+movement_y[I_TOP]][x] = ROBOT
-			return area
-		}
+		// ///////////
+		// if area[y+movement_y[I_TOP]][x] == WALL {
+		// 	return area
+		// }
 
-		//fmt.Println("TOPSTART! ", filter)
-		//fmt.Println(filtered_boxes)
-		//fmt.Println("Edge case", s.DataProvider.GetArea()[filter[len(filter)-1][0]-1][x])
+		// fmt.Println("TESTING @ZE IDEA")
+		// points := [][]int{}
+		// stack := Stack[[]int]{}
+		// stack.Push([]int{y + movement_y[I_TOP], x})
+		// s.FloodFillTheYaxis(area, &points, &stack)
+		// fmt.Println(points)
 
-		/* How to piece together the flood fill alg with this logic>? */
+		// slices.SortFunc(points, func(f []int, s []int) int {
+		// 	if f[0] > s[1] {
+		// 		return 1
+		// 	}
+		// 	return -1
+		// })
 
-		// If the boxes are further than 1 from the robot, move the robot and fajrant
-		if filter[len(filter)-1][1] != y {
-			area[y][x] = BLANK
-			area[y+movement_y[I_TOP]][x] = ROBOT
-			//fmt.Println("ASDASDSDASD")
-			return area
-		} else if area[filter[len(filter)-1][0]-1][x] == WALL {
-			//fmt.Println("ASDASDASFEFWW#CWECWE")
-			return area
-		} else {
-			// Move the robot on the first found index
-			area[filter[len(filter)-1][1]-1][x] = ROBOT
-			area[filter[len(filter)-1][1]][x] = BLANK
+		// // Convert to a vertical slice. TOP-DOWN
+		// vertical_line := ""
+		// for _, line := range area {
+		// 	vertical_line += line[x]
+		// }
 
-			//fmt.Println("ASDASDD")
-			// Shift the boxes by one to the right
-			for i := 0; i < len(filtered_boxes[len(filtered_boxes)-1]); i++ {
-				area[filter[len(filter)-1][0]-1+i][x] = BOX
-			}
+		// boxesMatch, _ := regexp.Compile(`[\[\]]+`)
+		// boxes := boxesMatch.FindAllString(vertical_line, -1)
+		// indexes := boxesMatch.FindAllStringIndex(vertical_line, -1)
 
-		}
+		// // Filtering the indexes with garbage collection
+		// filter := indexes[:0]
+		// filtered_boxes := boxes[:0]
+
+		// for i, candidate := range indexes {
+		// 	if candidate[1] <= y {
+		// 		filter = append(filter, candidate)
+		// 		filtered_boxes = append(filtered_boxes, boxes[i])
+		// 	}
+		// }
+
+		// for i := len(filter); i < len(indexes); i++ {
+		// 	indexes[i] = nil // or the zero value of T
+		// }
+
+		// // If all of the boxes are on the opposite side, move and fajrant
+		// if len(filter) == 0 {
+		// 	area[y][x] = BLANK
+		// 	area[y+movement_y[I_TOP]][x] = ROBOT
+		// 	return area
+		// }
+
+		// //fmt.Println("TOPSTART! ", filter)
+		// //fmt.Println(filtered_boxes)
+		// //fmt.Println("Edge case", s.DataProvider.GetArea()[filter[len(filter)-1][0]-1][x])
+
+		// /* How to piece together the flood fill alg with this logic>? */
+
+		// // If the boxes are further than 1 from the robot, move the robot and fajrant
+		// if filter[len(filter)-1][1] != y {
+		// 	area[y][x] = BLANK
+		// 	area[y+movement_y[I_TOP]][x] = ROBOT
+		// 	//fmt.Println("ASDASDSDASD")
+		// 	return area
+		// } else if area[filter[len(filter)-1][0]-1][x] == WALL {
+		// 	//fmt.Println("ASDASDASFEFWW#CWECWE")
+		// 	return area
+		// } else {
+		// 	// Move the robot on the first found index
+		// 	area[filter[len(filter)-1][1]-1][x] = ROBOT
+		// 	area[filter[len(filter)-1][1]][x] = BLANK
+
+		// 	//fmt.Println("ASDASDD")
+		// 	// Shift the boxes by one to the right
+		// 	for i := 0; i < len(filtered_boxes[len(filtered_boxes)-1]); i++ {
+		// 		area[filter[len(filter)-1][0]-1+i][x] = BOX
+		// 	}
+
+		//}
 	case C_DOWN:
 		if area[y+movement_y[I_DOWN]][x] == WALL {
 			return area
 		}
 
-		fmt.Println("TESTING @ZE IDEA")
+		//fmt.Println("TESTING @ZE IDEA")
 		points := [][]int{}
 		stack := Stack[[]int]{}
 		stack.Push([]int{y + movement_y[I_DOWN], x})
-		s.FloodFillTheYaxis(area, &points, &stack)
-		fmt.Println("Len points", len(points))
+		s.FloodFillTheYaxis(area, &points, &stack, C_DOWN, y)
+		//fmt.Println("Len points", len(points))
 
 		if len(points) == 0 {
 			area[y][x] = BLANK
@@ -1147,9 +1270,11 @@ func (s *Solution) PushAxisYpart2(area [][]string, d string) [][]string {
 		})
 
 		for _, p := range points {
+			//fmt.Println("Point", "(", p[0], ",", p[1], ")", " ", area[p[0]][p[1]])
+
 			if area[p[0]+1][p[1]] == WALL {
 				// Wypierdalać
-				fmt.Println("Wypuerdalac")
+				//fmt.Println("Wypuerdalac")
 				return area
 			}
 		}
@@ -1164,10 +1289,6 @@ func (s *Solution) PushAxisYpart2(area [][]string, d string) [][]string {
 		}
 		area[y+1][x] = ROBOT
 		area[y][x] = BLANK
-
-		for _, p := range points {
-			fmt.Println("Point", "(", p[0], ",", p[1], ")", " ", area[p[0]][p[1]])
-		}
 
 		// vertical_line := ""
 		// for _, line := range area {
@@ -1243,12 +1364,12 @@ func (s *Solution) PushAxisXpart2(area [][]string, d string) [][]string {
 	*/
 
 	y, x := s.FindRobotPosition(area)
-	fmt.Println(y, x, "EHASD")
+	//fmt.Println(y, x, "EHASD")
 
 	switch d {
 	case C_RIGHT:
 		if area[y][x+movement_x[I_RIGHT]] == WALL {
-			fmt.Println("ASDAGEDWW")
+			//fmt.Println("ASDAGEDWW")
 			return area
 		}
 		boxesMatch, _ := regexp.Compile(`[\[\]]+`)
@@ -1274,16 +1395,16 @@ func (s *Solution) PushAxisXpart2(area [][]string, d string) [][]string {
 		if len(filter) == 0 || len(filtered_boxes) == 0 {
 			area[y][x] = BLANK
 			area[y][x+movement_x[I_RIGHT]] = ROBOT
-			fmt.Println("HELO!")
+			//fmt.Println("HELO!")
 			return area
 		}
 
-		fmt.Println(filter)
-		fmt.Println(filtered_boxes)
+		//fmt.Println(filter)
+		//fmt.Println(filtered_boxes)
 
 		// If the boxes are further than 1 from the robot, move the robot and fajrant
 		if math.Abs(float64(filter[0][0]-x)) != 1 {
-			fmt.Println("JELO")
+			//fmt.Println("JELO")
 			area[y][x] = BLANK
 			area[y][x+movement_x[I_RIGHT]] = ROBOT
 			return area
@@ -1341,8 +1462,8 @@ func (s *Solution) PushAxisXpart2(area [][]string, d string) [][]string {
 			indexes[i] = nil // or the zero value of T
 		}
 
-		fmt.Println(filter)
-		fmt.Println(filtered_boxes)
+		//fmt.Println(filter)
+		//fmt.Println(filtered_boxes)
 
 		// If all of the boxes are on the opposite side, move and fajrant
 		if len(filter) == 0 || len(filtered_boxes) == 0 {
@@ -1381,63 +1502,68 @@ func (s *Solution) PushAxisXpart2(area [][]string, d string) [][]string {
 }
 
 func (s *Solution) Part2() int {
+	area := s.ConvertPart1AreaToPart2Version()
+
+	for _, line := range area {
+		fmt.Println(line)
+	}
 
 	for _, command := range s.DataProvider.GetCommands() {
 		// if i > 5 {
 		// 	break
 		// }
 		//y, x := s.FindRobotPosition(s.DataProvider.GetArea())
-		area := s.ConvertPart1AreaToPart2Version()
 
-		fmt.Println(area)
+		//fmt.Println(area)
 		switch command {
 		case C_TOP:
 			//
-			fmt.Println("Command top")
+			//fmt.Println("Command top")
 			// if s.DataProvider.GetArea()[y+movement_y[I_TOP]][x] == WALL {
 			// 	continue
 			// }
-			s.PushAxisYpart2(area, C_TOP)
+			area = s.PushAxisYpart2(area, C_TOP)
 
 		case C_RIGHT:
 			//
-			fmt.Println("Command right")
+			//fmt.Println("Command right")
 			// if s.DataProvider.GetArea()[y][x+movement_x[I_RIGHT]] == WALL {
 			// 	continue
 			// }
-			s.PushAxisXpart2(area, C_RIGHT)
+			area = s.PushAxisXpart2(area, C_RIGHT)
 
 		case C_DOWN:
 			//
-			fmt.Println("Command down")
+			//fmt.Println("Command down")
 			// if s.DataProvider.GetArea()[y+movement_y[I_DOWN]][x] == WALL {
 			// 	continue
 			// }
-			s.PushAxisYpart2(area, C_DOWN)
+			area = s.PushAxisYpart2(area, C_DOWN)
 
 		case C_LEFT:
 			//
-			fmt.Println("Command left")
+			//fmt.Println("Command left")
 			// if s.DataProvider.GetArea()[y][x+movement_x[I_LEFT]] == WALL {
 			// 	continue
 			// }
-			s.PushAxisXpart2(area, C_LEFT)
+			area = s.PushAxisXpart2(area, C_LEFT)
 		}
-		// for _, line := range s.DataProvider.GetArea() {
-		// 	fmt.Println(line)
-		// }
+	}
+
+	for _, line := range area {
+		fmt.Println(line)
 	}
 
 	res := 0
 
 	// Change for regex style
-	// for y, line := range s.DataProvider.GetArea() {
-	// 	for x, c := range line {
-	// 		if c == "[]" {
-	// 			res += y*100 + x
-	// 		}
-	// 	}
-	// }
+	for y, line := range area {
+		boxesMatch, _ := regexp.Compile(`[\[\]]`)
+		indexes := boxesMatch.FindAllStringIndex(strings.Join(line, ""), -1)
+		for _, index := range indexes {
+			res += y*100 + index[0]
+		}
+	}
 
 	return res
 }

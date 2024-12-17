@@ -1074,7 +1074,7 @@ func TestPushAxisXLeftPart2AtY1X8WallNoMovementinDescExample(t *testing.T) {
 	assert.Equal(t, testArea[1], []string{"#", "#", "[", "]", "[", "]", "[", "]", "@", ".", ".", ".", ".", ".", "#", "#"})
 }
 
-func TestPushAxisYpart2DownAtY1X2PushDownOneinDescExample(t *testing.T) {
+func TestPushAxisYpart2DownAtY3X2PushDownOneinDescExample(t *testing.T) {
 
 	path := "./test_data/data_2.txt"
 
@@ -1099,11 +1099,11 @@ func TestPushAxisYpart2DownAtY1X2PushDownOneinDescExample(t *testing.T) {
 
 	/*
 		#
+		.
+		.
 		@
-		O
-		O
-		O
-		O
+		[ ]
+		.
 		.
 		#
 	*/
@@ -1119,13 +1119,240 @@ func TestPushAxisYpart2DownAtY1X2PushDownOneinDescExample(t *testing.T) {
 	// The wanted method invocation
 	testArea = testSolution.PushAxisYpart2(testArea, C_DOWN)
 
+	fmt.Println(testArea[0][2])
+	fmt.Println(testArea[1][2])
+	fmt.Println(testArea[2][2])
+	fmt.Println(testArea[3][2])
+	fmt.Println(testArea[4][2])
+	fmt.Println(testArea[5][2])
+	fmt.Println(testArea[6][2])
+	fmt.Println(testArea[7][2])
+
 	// Expected results
 	assert.Equal(t, testArea[0][2], "#")
 	assert.Equal(t, testArea[1][2], ".")
-	assert.Equal(t, testArea[2][2], "@")
-	assert.Equal(t, testArea[3][2], "@")
-	assert.Equal(t, testArea[4][2], "O")
-	assert.Equal(t, testArea[5][2], "O")
+	assert.Equal(t, testArea[2][2], ".")
+	assert.Equal(t, testArea[3][2], ".")
+	assert.Equal(t, testArea[4][2], "@")
+	assert.Equal(t, testArea[5][2], "[")
+	assert.Equal(t, testArea[5][3], "]")
 	assert.Equal(t, testArea[6][2], ".")
 	assert.Equal(t, testArea[7][2], "#")
+}
+
+func TestPushAxisYpart2DownAtY3X2PushDownTripleHalfStackWallNoMovementInDescExample(t *testing.T) {
+
+	path := "./test_data/data_2.txt"
+
+	io_provider := file_handling.Test{}
+	dp := data_provider.NewDataProvider(io_provider)
+	testSolution := NewSolution(dp, path)
+
+	// Altering the data to suit the test
+	testSolution.DataProvider.GetArea()[2][2] = BLANK
+
+	// Given # # . . . . . @ [ ] [ ] . . # #
+	testArea := testSolution.ConvertPart1AreaToPart2Version()
+
+	// Altering the data to suit the test
+	testArea[1][2] = BLANK
+	testArea[2][2] = BLANK
+	testArea[3][2] = ROBOT
+	testArea[4][2] = BOX_LEFT
+	testArea[4][3] = BOX_RIGHT
+	testArea[5][1] = BOX_LEFT
+	testArea[5][2] = BOX_RIGHT
+	testArea[5][3] = BOX_LEFT
+	testArea[5][4] = BOX_RIGHT
+	testArea[6][2] = BLANK
+
+	/*
+			#
+			.
+			.
+			@
+			[ ]
+		  [ ] [ ]
+			.
+			#
+	*/
+	fmt.Println(testArea[0][2])
+	fmt.Println(testArea[1][2])
+	fmt.Println(testArea[2][2])
+	fmt.Println(testArea[3][2])
+	fmt.Println(testArea[4][2], " ", testArea[4][3])
+	fmt.Println(testArea[5][1], " ", testArea[5][2], " ", testArea[5][3], " ", testArea[5][4])
+	fmt.Println(testArea[6][2])
+	fmt.Println(testArea[7][2])
+
+	// The wanted method invocation
+	testArea = testSolution.PushAxisYpart2(testArea, C_DOWN)
+
+	fmt.Println(testArea[0][2])
+	fmt.Println(testArea[1][2])
+	fmt.Println(testArea[2][2])
+	fmt.Println(testArea[3][2])
+	fmt.Println(testArea[4][2], " ", testArea[4][3])
+	fmt.Println(testArea[5][1], " ", testArea[5][2], " ", testArea[5][3], " ", testArea[5][4])
+	fmt.Println(testArea[6][2])
+	fmt.Println(testArea[7][2])
+
+	// Expected results
+	assert.Equal(t, testArea[0][2], "#")
+	assert.Equal(t, testArea[1][2], ".")
+	assert.Equal(t, testArea[2][2], ".")
+	assert.Equal(t, testArea[3][2], "@")
+	assert.Equal(t, testArea[4][2], "[")
+	assert.Equal(t, testArea[5][2], "]")
+	assert.Equal(t, testArea[5][3], "[")
+	assert.Equal(t, testArea[6][2], ".")
+	assert.Equal(t, testArea[7][2], "#")
+}
+
+func TestPushAxisYpart2DownAtY3X2PushDownTripleHalfStackInDescExample(t *testing.T) {
+
+	path := "./test_data/data_6.txt"
+
+	io_provider := file_handling.Test{}
+	dp := data_provider.NewDataProvider(io_provider)
+	testSolution := NewSolution(dp, path)
+
+	// Altering the data to suit the test
+	testSolution.DataProvider.GetArea()[2][2] = BLANK
+
+	// Given # # . . . . . @ [ ] [ ] . . # #
+	testArea := testSolution.ConvertPart1AreaToPart2Version()
+
+	// Altering the data to suit the test
+	testArea[1][3] = BLANK
+	testArea[2][3] = BLANK
+	testArea[3][3] = ROBOT
+	testArea[4][3] = BOX_LEFT
+	testArea[4][4] = BOX_RIGHT
+	testArea[5][2] = BOX_LEFT
+	testArea[5][3] = BOX_RIGHT
+	testArea[5][4] = BOX_LEFT
+	testArea[5][5] = BOX_RIGHT
+	testArea[6][3] = BLANK
+
+	/*
+			#
+			.
+			.
+			@
+			[ ]
+		  [ ] [ ]
+			.
+			#
+	*/
+	fmt.Println(testArea[0][3])
+	fmt.Println(testArea[1][3])
+	fmt.Println(testArea[2][3])
+	fmt.Println(testArea[3][3])
+	fmt.Println(testArea[4][3], " ", testArea[4][4])
+	fmt.Println(testArea[5][2], " ", testArea[5][3], " ", testArea[5][4], " ", testArea[5][5])
+	fmt.Println(testArea[6][3])
+	fmt.Println(testArea[7][3])
+
+	// The wanted method invocation
+	testArea = testSolution.PushAxisYpart2(testArea, C_DOWN)
+
+	fmt.Println(testArea[0][3])
+	fmt.Println(testArea[1][3])
+	fmt.Println(testArea[2][3])
+	fmt.Println(testArea[3][3])
+	fmt.Println(testArea[4][3])
+	fmt.Println(testArea[5][3], " ", testArea[5][4])
+	fmt.Println(testArea[6][2], " ", testArea[6][3], " ", testArea[6][4], " ", testArea[6][5])
+	fmt.Println(testArea[7][3])
+
+	// Expected results
+	assert.Equal(t, testArea[0][3], "#")
+	assert.Equal(t, testArea[1][3], ".")
+	assert.Equal(t, testArea[2][3], ".")
+	assert.Equal(t, testArea[3][3], ".")
+	assert.Equal(t, testArea[4][3], "@")
+	assert.Equal(t, testArea[5][3], "[")
+	assert.Equal(t, testArea[5][4], "]")
+	assert.Equal(t, testArea[6][2], "[")
+	assert.Equal(t, testArea[6][3], "]")
+	assert.Equal(t, testArea[6][4], "[")
+	assert.Equal(t, testArea[6][5], "]")
+	assert.Equal(t, testArea[7][3], "#")
+}
+
+func TestPushAxisYpart2UpAtY3X2PushDownTripleHalfStackInDescExample(t *testing.T) {
+
+	path := "./test_data/data_5.txt"
+
+	io_provider := file_handling.Test{}
+	dp := data_provider.NewDataProvider(io_provider)
+	testSolution := NewSolution(dp, path)
+
+	// Altering the data to suit the test
+	testSolution.DataProvider.GetArea()[2][2] = BLANK
+
+	// Given # # . . . . . @ [ ] [ ] . . # #
+	testArea := testSolution.ConvertPart1AreaToPart2Version()
+
+	// Blanking the space
+	testArea[3][10] = BLANK
+	testArea[3][9] = BLANK
+	testArea[3][8] = BLANK
+	testArea[3][7] = BLANK
+	testArea[3][6] = BLANK
+	testArea[3][5] = BLANK
+	testArea[3][4] = BLANK
+	testArea[4][10] = BLANK
+	testArea[4][9] = BLANK
+	testArea[4][8] = BLANK
+	testArea[4][7] = BLANK
+	testArea[4][6] = BLANK
+	testArea[4][5] = BLANK
+	testArea[4][4] = BLANK
+
+	// Altering the data to suit the test
+	testArea[3][5] = ROBOT
+	testArea[2][5] = BOX_LEFT
+	testArea[2][6] = BOX_RIGHT
+	testArea[3][6] = BOX_LEFT
+	testArea[3][7] = BOX_RIGHT
+	testArea[2][7] = BOX_LEFT
+	testArea[2][8] = BOX_RIGHT
+
+	/*
+			#
+			.
+			.
+			@
+			[ ]
+		  [ ] [ ]
+			.
+			#
+	*/
+
+	for _, line := range testArea {
+		fmt.Println(line)
+	}
+
+	// The wanted method invocation
+	testArea = testSolution.PushAxisYpart2(testArea, C_TOP)
+
+	for _, line := range testArea {
+		fmt.Println(line)
+	}
+
+	// Expected results
+	assert.Equal(t, testArea[0][3], "#")
+	assert.Equal(t, testArea[1][3], ".")
+	// assert.Equal(t, testArea[2][3], ".")
+	// assert.Equal(t, testArea[3][3], ".")
+	// assert.Equal(t, testArea[4][3], "@")
+	assert.Equal(t, testArea[5][3], "[")
+	// assert.Equal(t, testArea[5][4], "]")
+	// assert.Equal(t, testArea[6][2], "[")
+	// assert.Equal(t, testArea[6][3], "]")
+	// assert.Equal(t, testArea[6][4], "[")
+	// assert.Equal(t, testArea[6][5], "]")
+	// assert.Equal(t, testArea[7][3], "#")
 }
