@@ -37,11 +37,142 @@ func TestPushAxisXRightAtY1X2inDescExample(t *testing.T) {
 	// The wanted method invocation
 	// Given #.@O.O.#
 	fmt.Println("line expected: ", testSolution.DataProvider.GetArea()[1])
-	pushResult := testSolution.PushAxisX(C_RIGHT)
+	pushResult := testSolution.PushAxisXnew(C_RIGHT)
 
 	// Expected results
 	assert.True(t, pushResult)
 	assert.Equal(t, testSolution.DataProvider.GetArea()[1], []string{"#", ".", ".", "@", "O", "O", ".", "#"})
+}
+
+func TestPushAxisXLeftAtY1X6inDescExample(t *testing.T) {
+
+	path := "./test_data/data_2.txt"
+
+	io_provider := file_handling.Test{}
+	dp := data_provider.NewDataProvider(io_provider)
+	testSolution := NewSolution(dp, path)
+
+	// Altering the data to suit the test
+	testSolution.DataProvider.GetArea()[2][2] = BLANK
+	testSolution.DataProvider.GetArea()[1][1] = BLANK
+	testSolution.DataProvider.GetArea()[1][2] = BOX
+	testSolution.DataProvider.GetArea()[1][3] = BLANK
+	testSolution.DataProvider.GetArea()[1][4] = BOX
+	testSolution.DataProvider.GetArea()[1][5] = BLANK
+	testSolution.DataProvider.GetArea()[1][6] = ROBOT
+
+	// The wanted method invocation
+	fmt.Println("line expected: ", testSolution.DataProvider.GetArea()[1])
+	pushResult := testSolution.PushAxisXnew(C_LEFT)
+
+	// Expected results
+	assert.True(t, pushResult)
+	assert.Equal(t, testSolution.DataProvider.GetArea()[1], []string{"#", ".", "O", ".", "O", "@", ".", "#"})
+}
+
+func TestPushAxisXLeftAtY1X5inDescExample(t *testing.T) {
+
+	path := "./test_data/data_2.txt"
+
+	io_provider := file_handling.Test{}
+	dp := data_provider.NewDataProvider(io_provider)
+	testSolution := NewSolution(dp, path)
+
+	// Altering the data to suit the test
+	testSolution.DataProvider.GetArea()[2][2] = BLANK
+	testSolution.DataProvider.GetArea()[1][1] = BLANK
+	testSolution.DataProvider.GetArea()[1][2] = BOX
+	testSolution.DataProvider.GetArea()[1][3] = BLANK
+	testSolution.DataProvider.GetArea()[1][4] = BOX
+	testSolution.DataProvider.GetArea()[1][5] = ROBOT
+	testSolution.DataProvider.GetArea()[1][6] = BLANK
+
+	// The wanted method invocation
+	fmt.Println("line expected: ", testSolution.DataProvider.GetArea()[1])
+	pushResult := testSolution.PushAxisXnew(C_LEFT)
+
+	// Expected results
+	assert.True(t, pushResult)
+	assert.Equal(t, testSolution.DataProvider.GetArea()[1], []string{"#", ".", "O", "O", "@", ".", ".", "#"})
+}
+
+func TestPushAxisXLeftAtY1X5BoToTheRightShouldNotCountinDescExample(t *testing.T) {
+
+	path := "./test_data/data_2.txt"
+
+	io_provider := file_handling.Test{}
+	dp := data_provider.NewDataProvider(io_provider)
+	testSolution := NewSolution(dp, path)
+
+	// Altering the data to suit the test
+	testSolution.DataProvider.GetArea()[2][2] = BLANK
+	testSolution.DataProvider.GetArea()[1][1] = BLANK
+	testSolution.DataProvider.GetArea()[1][2] = BOX
+	testSolution.DataProvider.GetArea()[1][3] = BLANK
+	testSolution.DataProvider.GetArea()[1][4] = BOX
+	testSolution.DataProvider.GetArea()[1][5] = ROBOT
+	testSolution.DataProvider.GetArea()[1][6] = BOX
+
+	// The wanted method invocation
+	fmt.Println("line expected: ", testSolution.DataProvider.GetArea()[1])
+	pushResult := testSolution.PushAxisXnew(C_LEFT)
+
+	// Expected results
+	assert.True(t, pushResult)
+	assert.Equal(t, testSolution.DataProvider.GetArea()[1], []string{"#", ".", "O", "O", "@", ".", "O", "#"})
+}
+
+func TestPushAxisXLeftAtY1X4TwoPushDescExample(t *testing.T) {
+
+	path := "./test_data/data_2.txt"
+
+	io_provider := file_handling.Test{}
+	dp := data_provider.NewDataProvider(io_provider)
+	testSolution := NewSolution(dp, path)
+
+	// Altering the data to suit the test
+	testSolution.DataProvider.GetArea()[2][2] = BLANK
+	testSolution.DataProvider.GetArea()[1][1] = BLANK
+	testSolution.DataProvider.GetArea()[1][2] = BOX
+	testSolution.DataProvider.GetArea()[1][3] = BOX
+	testSolution.DataProvider.GetArea()[1][4] = ROBOT
+	testSolution.DataProvider.GetArea()[1][5] = BLANK
+	testSolution.DataProvider.GetArea()[1][6] = BOX
+
+	// The wanted method invocation
+	fmt.Println("line expected: ", testSolution.DataProvider.GetArea()[1])
+	pushResult := testSolution.PushAxisXnew(C_LEFT)
+
+	// Expected results
+	assert.True(t, pushResult)
+	assert.Equal(t, testSolution.DataProvider.GetArea()[1], []string{"#", "O", "O", "@", ".", ".", "O", "#"})
+}
+
+func TestPushAxisXRightAtY1X3inDescExample(t *testing.T) {
+
+	path := "./test_data/data_2.txt"
+
+	io_provider := file_handling.Test{}
+	dp := data_provider.NewDataProvider(io_provider)
+	testSolution := NewSolution(dp, path)
+
+	// Altering the data to suit the test
+	testSolution.DataProvider.GetArea()[2][2] = BLANK
+	testSolution.DataProvider.GetArea()[1][1] = BLANK
+	testSolution.DataProvider.GetArea()[1][2] = BLANK
+	testSolution.DataProvider.GetArea()[1][3] = ROBOT
+	testSolution.DataProvider.GetArea()[1][4] = BOX
+	testSolution.DataProvider.GetArea()[1][5] = BOX
+	testSolution.DataProvider.GetArea()[1][6] = BLANK
+
+	// The wanted method invocation
+	// Given #.@O.O.#
+	fmt.Println("line expected: ", testSolution.DataProvider.GetArea()[1])
+	pushResult := testSolution.PushAxisXnew(C_RIGHT)
+
+	// Expected results
+	assert.True(t, pushResult)
+	assert.Equal(t, testSolution.DataProvider.GetArea()[1], []string{"#", ".", ".", ".", "@", "O", "O", "#"})
 }
 
 func TestPushAxisXLeftAtY4X5inDescExample(t *testing.T) {
@@ -59,14 +190,14 @@ func TestPushAxisXLeftAtY4X5inDescExample(t *testing.T) {
 	// The wanted method invocation
 	// Given #.#.O@.#
 	fmt.Println("line expected: ", testSolution.DataProvider.GetArea()[4])
-	pushResult := testSolution.PushAxisX(C_LEFT)
+	pushResult := testSolution.PushAxisXnew(C_LEFT)
 
 	// Expected results
 	assert.True(t, pushResult)
 	assert.Equal(t, testSolution.DataProvider.GetArea()[4], []string{"#", ".", "#", "O", "@", ".", ".", "#"})
 }
 
-func TestPushAxisYDownAtY1X4inDescExample(t *testing.T) {
+func TestPushAxisYDownAtY1X2PushDownOneinDescExample(t *testing.T) {
 
 	path := "./test_data/data_2.txt"
 
@@ -75,8 +206,12 @@ func TestPushAxisYDownAtY1X4inDescExample(t *testing.T) {
 	testSolution := NewSolution(dp, path)
 
 	// Altering the data to suit the test
-	testSolution.DataProvider.GetArea()[2][2] = BLANK
-	testSolution.DataProvider.GetArea()[1][4] = ROBOT
+	testSolution.DataProvider.GetArea()[1][2] = BOX
+	testSolution.DataProvider.GetArea()[2][2] = ROBOT
+	testSolution.DataProvider.GetArea()[3][2] = BLANK
+	testSolution.DataProvider.GetArea()[4][2] = BOX
+	testSolution.DataProvider.GetArea()[5][2] = BOX
+	testSolution.DataProvider.GetArea()[6][2] = BLANK
 
 	/*
 		#
@@ -88,31 +223,443 @@ func TestPushAxisYDownAtY1X4inDescExample(t *testing.T) {
 		.
 		#
 	*/
-	fmt.Println(testSolution.DataProvider.GetArea()[0][4])
-	fmt.Println(testSolution.DataProvider.GetArea()[1][4])
-	fmt.Println(testSolution.DataProvider.GetArea()[2][4])
-	fmt.Println(testSolution.DataProvider.GetArea()[3][4])
-	fmt.Println(testSolution.DataProvider.GetArea()[4][4])
-	fmt.Println(testSolution.DataProvider.GetArea()[5][4])
-	fmt.Println(testSolution.DataProvider.GetArea()[6][4])
-	fmt.Println(testSolution.DataProvider.GetArea()[7][4])
+	fmt.Println(testSolution.DataProvider.GetArea()[0][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[1][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[2][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[3][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[4][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[5][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[6][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[7][2])
 
 	// The wanted method invocation
-	pushResult := testSolution.PushAxisY(C_DOWN)
+	pushResult := testSolution.PushAxisYnew(C_DOWN)
 
 	// Expected results
 	assert.True(t, pushResult)
-	assert.Equal(t, testSolution.DataProvider.GetArea()[0][4], "#")
-	assert.Equal(t, testSolution.DataProvider.GetArea()[1][4], ".")
-	assert.Equal(t, testSolution.DataProvider.GetArea()[2][4], "@")
-	assert.Equal(t, testSolution.DataProvider.GetArea()[3][4], "O")
-	assert.Equal(t, testSolution.DataProvider.GetArea()[4][4], "O")
-	assert.Equal(t, testSolution.DataProvider.GetArea()[5][4], "O")
-	assert.Equal(t, testSolution.DataProvider.GetArea()[6][4], "O")
-	assert.Equal(t, testSolution.DataProvider.GetArea()[7][4], "#")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[0][2], "#")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[1][2], "O")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[2][2], ".")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[3][2], "@")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[4][2], "O")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[5][2], "O")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[6][2], ".")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[7][2], "#")
 }
 
-func TestIntegrationPart1CalcBWith480DataSet(t *testing.T) {
+func TestPushAxisYDownAtY2X2PushTwoBoxesinDescExample(t *testing.T) {
+
+	path := "./test_data/data_2.txt"
+
+	io_provider := file_handling.Test{}
+	dp := data_provider.NewDataProvider(io_provider)
+	testSolution := NewSolution(dp, path)
+
+	// Altering the data to suit the test
+	testSolution.DataProvider.GetArea()[1][2] = BOX
+	testSolution.DataProvider.GetArea()[2][2] = BLANK
+	testSolution.DataProvider.GetArea()[3][2] = ROBOT
+	testSolution.DataProvider.GetArea()[4][2] = BOX
+	testSolution.DataProvider.GetArea()[5][2] = BOX
+	testSolution.DataProvider.GetArea()[6][2] = BLANK
+
+	/*
+		#
+		@
+		O
+		O
+		O
+		O
+		.
+		#
+	*/
+	fmt.Println(testSolution.DataProvider.GetArea()[0][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[1][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[2][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[3][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[4][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[5][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[6][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[7][2])
+
+	// The wanted method invocation
+	pushResult := testSolution.PushAxisYnew(C_DOWN)
+
+	fmt.Println(testSolution.DataProvider.GetArea()[0][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[1][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[2][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[3][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[4][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[5][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[6][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[7][2])
+
+	// Expected results
+	assert.True(t, pushResult)
+	assert.Equal(t, testSolution.DataProvider.GetArea()[0][2], "#")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[1][2], "O")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[2][2], ".")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[3][2], ".")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[4][2], "@")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[5][2], "O")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[6][2], "O")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[7][2], "#")
+}
+
+func TestPushAxisYUPAtY3X2PushTwoBoxesinDescExample(t *testing.T) {
+
+	path := "./test_data/data_2.txt"
+
+	io_provider := file_handling.Test{}
+	dp := data_provider.NewDataProvider(io_provider)
+	testSolution := NewSolution(dp, path)
+
+	// Altering the data to suit the test
+	testSolution.DataProvider.GetArea()[1][2] = BOX
+	testSolution.DataProvider.GetArea()[2][2] = BLANK
+	testSolution.DataProvider.GetArea()[3][2] = ROBOT
+	testSolution.DataProvider.GetArea()[4][2] = BOX
+	testSolution.DataProvider.GetArea()[5][2] = BOX
+	testSolution.DataProvider.GetArea()[6][2] = BLANK
+
+	/*
+		#
+		@
+		O
+		O
+		O
+		O
+		.
+		#
+	*/
+	fmt.Println(testSolution.DataProvider.GetArea()[0][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[1][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[2][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[3][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[4][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[5][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[6][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[7][2])
+
+	// The wanted method invocation
+	pushResult := testSolution.PushAxisYnew(C_TOP)
+
+	fmt.Println(testSolution.DataProvider.GetArea()[0][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[1][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[2][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[3][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[4][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[5][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[6][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[7][2])
+
+	// Expected results
+	assert.True(t, pushResult)
+	assert.Equal(t, testSolution.DataProvider.GetArea()[0][2], "#")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[1][2], "O")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[2][2], "@")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[3][2], ".")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[4][2], "O")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[5][2], "O")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[6][2], ".")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[7][2], "#")
+}
+
+func TestPushAxisYUPAtY6X2PushTwoBoxesinDescExample(t *testing.T) {
+
+	path := "./test_data/data_2.txt"
+
+	io_provider := file_handling.Test{}
+	dp := data_provider.NewDataProvider(io_provider)
+	testSolution := NewSolution(dp, path)
+
+	// Altering the data to suit the test
+	testSolution.DataProvider.GetArea()[1][2] = BLANK
+	testSolution.DataProvider.GetArea()[2][2] = BOX
+	testSolution.DataProvider.GetArea()[3][2] = BOX
+	testSolution.DataProvider.GetArea()[4][2] = BOX
+	testSolution.DataProvider.GetArea()[5][2] = BOX
+	testSolution.DataProvider.GetArea()[6][2] = ROBOT
+
+	/*
+		#
+		@
+		O
+		O
+		O
+		O
+		.
+		#
+	*/
+	fmt.Println(testSolution.DataProvider.GetArea()[0][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[1][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[2][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[3][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[4][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[5][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[6][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[7][2])
+
+	// The wanted method invocation
+	pushResult := testSolution.PushAxisYnew(C_TOP)
+
+	fmt.Println(testSolution.DataProvider.GetArea()[0][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[1][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[2][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[3][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[4][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[5][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[6][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[7][2])
+
+	// Expected results
+	assert.True(t, pushResult)
+	assert.Equal(t, testSolution.DataProvider.GetArea()[0][2], "#")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[1][2], "O")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[2][2], "O")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[3][2], "O")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[4][2], "O")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[5][2], "@")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[6][2], ".")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[7][2], "#")
+}
+
+func TestPushAxisYUPAtY6X2PushOneBoxinDescExample(t *testing.T) {
+
+	path := "./test_data/data_2.txt"
+
+	io_provider := file_handling.Test{}
+	dp := data_provider.NewDataProvider(io_provider)
+	testSolution := NewSolution(dp, path)
+
+	// Altering the data to suit the test
+	testSolution.DataProvider.GetArea()[1][2] = BOX
+	testSolution.DataProvider.GetArea()[2][2] = BLANK
+	testSolution.DataProvider.GetArea()[3][2] = BLANK
+	testSolution.DataProvider.GetArea()[4][2] = BLANK
+	testSolution.DataProvider.GetArea()[5][2] = BOX
+	testSolution.DataProvider.GetArea()[6][2] = ROBOT
+
+	/*
+		#
+		@
+		O
+		O
+		O
+		O
+		.
+		#
+	*/
+	fmt.Println(testSolution.DataProvider.GetArea()[0][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[1][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[2][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[3][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[4][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[5][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[6][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[7][2])
+
+	// The wanted method invocation
+	pushResult := testSolution.PushAxisYnew(C_TOP)
+
+	fmt.Println(testSolution.DataProvider.GetArea()[0][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[1][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[2][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[3][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[4][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[5][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[6][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[7][2])
+
+	// Expected results
+	assert.True(t, pushResult)
+	assert.Equal(t, testSolution.DataProvider.GetArea()[0][2], "#")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[1][2], "O")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[2][2], ".")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[3][2], ".")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[4][2], "O")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[5][2], "@")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[6][2], ".")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[7][2], "#")
+}
+
+func TestPushAxisYUPAtY5X2PushOneBoxinDescExample(t *testing.T) {
+
+	path := "./test_data/data_2.txt"
+
+	io_provider := file_handling.Test{}
+	dp := data_provider.NewDataProvider(io_provider)
+	testSolution := NewSolution(dp, path)
+
+	// Altering the data to suit the test
+	testSolution.DataProvider.GetArea()[1][2] = BOX
+	testSolution.DataProvider.GetArea()[2][2] = BLANK
+	testSolution.DataProvider.GetArea()[3][2] = BLANK
+	testSolution.DataProvider.GetArea()[4][2] = BOX
+	testSolution.DataProvider.GetArea()[5][2] = ROBOT
+	testSolution.DataProvider.GetArea()[6][2] = BLANK
+
+	/*
+		#
+		@
+		O
+		O
+		O
+		O
+		.
+		#
+	*/
+	fmt.Println(testSolution.DataProvider.GetArea()[0][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[1][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[2][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[3][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[4][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[5][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[6][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[7][2])
+
+	// The wanted method invocation
+	pushResult := testSolution.PushAxisYnew(C_TOP)
+
+	fmt.Println(testSolution.DataProvider.GetArea()[0][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[1][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[2][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[3][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[4][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[5][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[6][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[7][2])
+
+	// Expected results
+	assert.True(t, pushResult)
+	assert.Equal(t, testSolution.DataProvider.GetArea()[0][2], "#")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[1][2], "O")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[2][2], ".")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[3][2], "O")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[4][2], "@")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[5][2], ".")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[6][2], ".")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[7][2], "#")
+}
+
+func TestPushAxisYUPAtY4X2WallBoxinDescExample(t *testing.T) {
+
+	path := "./test_data/data_2.txt"
+
+	io_provider := file_handling.Test{}
+	dp := data_provider.NewDataProvider(io_provider)
+	testSolution := NewSolution(dp, path)
+
+	// Altering the data to suit the test
+	testSolution.DataProvider.GetArea()[1][2] = BOX
+	testSolution.DataProvider.GetArea()[2][2] = WALL
+	testSolution.DataProvider.GetArea()[3][2] = BOX
+	testSolution.DataProvider.GetArea()[4][2] = ROBOT
+	testSolution.DataProvider.GetArea()[5][2] = BLANK
+	testSolution.DataProvider.GetArea()[6][2] = BLANK
+
+	/*
+		#
+		@
+		O
+		O
+		O
+		O
+		.
+		#
+	*/
+	fmt.Println(testSolution.DataProvider.GetArea()[0][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[1][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[2][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[3][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[4][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[5][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[6][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[7][2])
+
+	// The wanted method invocation
+	pushResult := testSolution.PushAxisYnew(C_TOP)
+
+	fmt.Println(testSolution.DataProvider.GetArea()[0][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[1][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[2][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[3][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[4][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[5][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[6][2])
+	fmt.Println(testSolution.DataProvider.GetArea()[7][2])
+
+	// Expected results
+	assert.False(t, pushResult)
+	assert.Equal(t, testSolution.DataProvider.GetArea()[0][2], "#")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[1][2], "O")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[2][2], "#")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[3][2], "O")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[4][2], "@")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[5][2], ".")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[6][2], ".")
+	assert.Equal(t, testSolution.DataProvider.GetArea()[7][2], "#")
+}
+
+// func TestIntegrationPart1CalcBWith480DataSet(t *testing.T) {
+
+// 	path := "./test_data/data_2.txt"
+
+// 	io_provider := file_handling.Test{}
+// 	dp := data_provider.NewDataProvider(io_provider)
+
+// 	testSolution := NewSolution(dp, path)
+// 	assert.Equal(t, testSolution.Part1(), 1)
+
+// }
+
+// func TestPushAxisYDownAtY1X4inDescExample(t *testing.T) {
+
+// 	path := "./test_data/data_2.txt"
+
+// 	io_provider := file_handling.Test{}
+// 	dp := data_provider.NewDataProvider(io_provider)
+// 	testSolution := NewSolution(dp, path)
+
+// 	// Altering the data to suit the test
+// 	testSolution.DataProvider.GetArea()[2][2] = BLANK
+// 	testSolution.DataProvider.GetArea()[1][4] = ROBOT
+
+// 	/*
+// 		#
+// 		@
+// 		O
+// 		O
+// 		O
+// 		O
+// 		.
+// 		#
+// 	*/
+// 	fmt.Println(testSolution.DataProvider.GetArea()[0][4])
+// 	fmt.Println(testSolution.DataProvider.GetArea()[1][4])
+// 	fmt.Println(testSolution.DataProvider.GetArea()[2][4])
+// 	fmt.Println(testSolution.DataProvider.GetArea()[3][4])
+// 	fmt.Println(testSolution.DataProvider.GetArea()[4][4])
+// 	fmt.Println(testSolution.DataProvider.GetArea()[5][4])
+// 	fmt.Println(testSolution.DataProvider.GetArea()[6][4])
+// 	fmt.Println(testSolution.DataProvider.GetArea()[7][4])
+
+// 	// The wanted method invocation
+// 	pushResult := testSolution.PushAxisY(C_DOWN)
+
+// 	// Expected results
+// 	assert.True(t, pushResult)
+// 	assert.Equal(t, testSolution.DataProvider.GetArea()[0][4], "#")
+// 	assert.Equal(t, testSolution.DataProvider.GetArea()[1][4], ".")
+// 	assert.Equal(t, testSolution.DataProvider.GetArea()[2][4], "@")
+// 	assert.Equal(t, testSolution.DataProvider.GetArea()[3][4], "O")
+// 	assert.Equal(t, testSolution.DataProvider.GetArea()[4][4], "O")
+// 	assert.Equal(t, testSolution.DataProvider.GetArea()[5][4], "O")
+// 	assert.Equal(t, testSolution.DataProvider.GetArea()[6][4], "O")
+// 	assert.Equal(t, testSolution.DataProvider.GetArea()[7][4], "#")
+// }
+
+func TestDownNotCloningOnExampleData(t *testing.T) {
 
 	path := "./test_data/data_3.txt"
 
@@ -120,6 +667,65 @@ func TestIntegrationPart1CalcBWith480DataSet(t *testing.T) {
 	dp := data_provider.NewDataProvider(io_provider)
 
 	testSolution := NewSolution(dp, path)
-	assert.Equal(t, testSolution.Part1(), 1)
+
+	// Counting the number of boxes to check for any big errors
+
+	pre_test := 0
+	for _, line := range testSolution.DataProvider.GetArea() {
+		for _, c := range line {
+			if c == "O" {
+				pre_test++
+			}
+		}
+	}
+
+	testSolution.Part1()
+
+	post_test := 0
+	for _, line := range testSolution.DataProvider.GetArea() {
+		for _, c := range line {
+			if c == "O" {
+				post_test++
+			}
+		}
+	}
+
+	assert.Equal(t, pre_test, post_test)
+
+}
+
+func TestIntegrationPart1CalcBWith480DataSet(t *testing.T) {
+
+	path := "./test_data/data_4.txt"
+
+	io_provider := file_handling.Test{}
+	dp := data_provider.NewDataProvider(io_provider)
+
+	testSolution := NewSolution(dp, path)
+
+	// Counting the number of boxes to check for any big errors
+
+	pre_test := 0
+	for _, line := range testSolution.DataProvider.GetArea() {
+		for _, c := range line {
+			if c == "O" {
+				pre_test++
+			}
+		}
+	}
+
+	test_result := testSolution.Part1()
+
+	post_test := 0
+	for _, line := range testSolution.DataProvider.GetArea() {
+		for _, c := range line {
+			if c == "O" {
+				post_test++
+			}
+		}
+	}
+
+	assert.Equal(t, pre_test, post_test)
+	assert.Equal(t, test_result, 10092)
 
 }

@@ -2,6 +2,4 @@ README.md
 pierniczek
 data.txt
 data_example.txt
-data_2.txt
-data_1.txt
-data_3.txt
+data_*.txt
