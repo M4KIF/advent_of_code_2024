@@ -68,213 +68,42 @@ func (s *Solution) FindRobotPosition(area [][]string) (int, int) {
 	return -1, -1
 }
 
-func (s *Solution) SearchForWallAndBoxesAtY(y, x int, direction string) (int, int) {
-	// Oribl
-	if !s.IsPointSafe(s.DataProvider.GetArea(), y, x) {
-		return -1, -1
-	}
+// func (s *Solution) SearchForWallAndBoxesAtY(y, x int, direction string) (int, int) {
+// 	// Oribl
+// 	if !s.IsPointSafe(s.DataProvider.GetArea(), y, x) {
+// 		return -1, -1
+// 	}
 
-	boxes_count := 0
+// 	boxes_count := 0
 
-	wallMatch, _ := regexp.Compile("#")
-	boxesMatch, _ := regexp.Compile("O")
+// 	wallMatch, _ := regexp.Compile("#")
+// 	boxesMatch, _ := regexp.Compile("O")
 
-	switch direction {
-	case C_TOP:
-		for t_y := y; t_y >= 0; t_y-- {
-			if boxesMatch.Match([]byte(s.DataProvider.GetArea()[t_y][x])) {
-				boxes_count++
-			}
-			if wallMatch.Match([]byte(s.DataProvider.GetArea()[t_y][x])) {
-				return t_y, boxes_count
-			}
-		}
-	case C_DOWN:
-		for t_y := y; t_y < len(s.DataProvider.GetArea()); t_y++ {
-			if boxesMatch.Match([]byte(s.DataProvider.GetArea()[t_y][x])) {
-				boxes_count++
-			}
-			if wallMatch.Match([]byte(s.DataProvider.GetArea()[t_y][x])) {
-				return t_y, boxes_count
-			}
-		}
-	}
+// 	switch direction {
+// 	case C_TOP:
+// 		for t_y := y; t_y >= 0; t_y-- {
+// 			if boxesMatch.Match([]byte(s.DataProvider.GetArea()[t_y][x])) {
+// 				boxes_count++
+// 			}
+// 			if wallMatch.Match([]byte(s.DataProvider.GetArea()[t_y][x])) {
+// 				return t_y, boxes_count
+// 			}
+// 		}
+// 	case C_DOWN:
+// 		for t_y := y; t_y < len(s.DataProvider.GetArea()); t_y++ {
+// 			if boxesMatch.Match([]byte(s.DataProvider.GetArea()[t_y][x])) {
+// 				boxes_count++
+// 			}
+// 			if wallMatch.Match([]byte(s.DataProvider.GetArea()[t_y][x])) {
+// 				return t_y, boxes_count
+// 			}
+// 		}
+// 	}
 
-	return -1, -1
-}
+// 	return -1, -1
+// }
 
-func (s *Solution) PushAxisY(d string) bool {
-
-	y, x := s.FindRobotPosition(s.DataProvider.GetArea())
-
-	wall_y, boxes_count := s.SearchForWallAndBoxesAtY(y, x, d)
-
-	delta_y := int(math.Abs(math.Abs(float64(wall_y)) - math.Abs(float64(y))))
-
-	blank_spaces := delta_y - boxes_count
-
-	fmt.Println("y: ", y, " x:", x, " wall_x: ", wall_y, " boxes_count: ",
-		boxes_count, " delta_x: ", delta_y, " blanks: ", blank_spaces)
-
-	// Stands near/at a wall
-	if delta_y <= 1 {
-		return false
-	}
-
-	// Already pushed what was possible to push
-	if blank_spaces == 0 {
-		return false
-	}
-
-	switch d {
-	case C_TOP:
-		// if boxes_count <= 0 || s.DataProvider.GetArea()[y-1][x] != BOX {
-		// 	s.DataProvider.GetArea()[y][x] = BLANK
-		// 	s.DataProvider.GetArea()[y-1][x] = ROBOT
-		// 	return true
-		// }
-		// for i := wall_y + 1; i <= y; i++ {
-		// 	if boxes_count > 0 {
-		// 		s.DataProvider.GetArea()[i][x] = BOX
-		// 		boxes_count--
-		// 	} else if boxes_count == 0 {
-		// 		s.DataProvider.GetArea()[i][x] = ROBOT
-		// 		boxes_count--
-		// 	} else {
-		// 		s.DataProvider.GetArea()[i][x] = BLANK
-		// 	}
-		// }
-		// fmt.Println("line expected: ", s.DataProvider.GetArea()[y])
-
-		// Convert to a vertical slice. TOP-DOWN
-		vertical_line := ""
-		for _, line := range s.DataProvider.GetArea() {
-			vertical_line += line[x]
-		}
-
-		boxesMatch, _ := regexp.Compile("O+")
-		boxes := boxesMatch.FindAllString(vertical_line, -1)
-		indexes := boxesMatch.FindAllStringIndex(vertical_line, -1)
-
-		if boxes == nil {
-			s.DataProvider.GetArea()[y][x] = BLANK
-			s.DataProvider.GetArea()[y][x+1] = ROBOT
-			return true
-		}
-
-		// Filtering the indexes with garbage collection
-		filter := indexes[:0]
-		filtered_boxes := boxes[:0]
-
-		for i, candidate := range indexes {
-			if candidate[1] <= y {
-				filter = append(filter, candidate)
-				filtered_boxes = append(filtered_boxes, boxes[i])
-			}
-		}
-
-		for i := len(filter); i < len(indexes); i++ {
-			indexes[i] = nil // or the zero value of T
-		}
-
-		// If all of the boxes are on the opposite side, move and fajrant
-		if len(filter) == 0 {
-			s.DataProvider.GetArea()[y][x] = BLANK
-			s.DataProvider.GetArea()[y-1][x] = ROBOT
-			return true
-		}
-
-		fmt.Println("TOPSTART! ", filter)
-		fmt.Println(filtered_boxes)
-
-		// If the boxes are further than 1 from the robot, move the robot and fajrant
-		if filter[len(filter)-1][1] != y {
-			s.DataProvider.GetArea()[y][x] = BLANK
-			s.DataProvider.GetArea()[y-1][x] = ROBOT
-			fmt.Println("ASDASDSDASD")
-			return true
-		} else if s.DataProvider.GetArea()[y][filter[len(filter)-1][0]-1] == WALL {
-			return false
-		} else {
-			// Move the robot on the first found index
-			s.DataProvider.GetArea()[filter[len(filter)-1][1]-1][x] = ROBOT
-			s.DataProvider.GetArea()[filter[len(filter)-1][1]][x] = BLANK
-
-			fmt.Println("ASDASD")
-			// Shift the boxes by one to the right
-			for i := 0; i < len(filtered_boxes[len(filtered_boxes)-1]); i++ {
-				s.DataProvider.GetArea()[filter[len(filter)-1][0]-1+i][x] = BOX
-			}
-
-		}
-	case C_DOWN:
-		vertical_line := ""
-		for _, line := range s.DataProvider.GetArea() {
-			vertical_line += line[x]
-		}
-
-		boxesMatch, _ := regexp.Compile("O+")
-		boxes := boxesMatch.FindAllString(vertical_line, -1)
-		indexes := boxesMatch.FindAllStringIndex(vertical_line, -1)
-
-		if boxes == nil {
-			s.DataProvider.GetArea()[y][x] = BLANK
-			s.DataProvider.GetArea()[y][x+1] = ROBOT
-			return true
-		}
-
-		// Filtering the indexes with garbage collection
-		filter := indexes[:0]
-		filtered_boxes := boxes[:0]
-
-		for i, candidate := range indexes {
-			if candidate[0] > y {
-				filter = append(filter, candidate)
-				filtered_boxes = append(filtered_boxes, boxes[i])
-			}
-		}
-
-		for i := len(filter); i < len(indexes); i++ {
-			indexes[i] = nil // or the zero value of T
-		}
-
-		// If all of the boxes are on the opposite side, move and fajrant
-		if len(filter) == 0 {
-			s.DataProvider.GetArea()[y][x] = BLANK
-			s.DataProvider.GetArea()[y+1][x] = ROBOT
-			return true
-		}
-
-		fmt.Println("DOWNSTART! ", filter)
-		fmt.Println(filtered_boxes)
-
-		// If the boxes are further than 1 from the robot, move the robot and fajrant
-		if math.Abs(float64(filter[0][0]-y)) != 1 {
-			s.DataProvider.GetArea()[y][x] = BLANK
-			s.DataProvider.GetArea()[y+1][x] = ROBOT
-			fmt.Println("ASDASDSDASD")
-			return true
-		} else if s.DataProvider.GetArea()[filter[0][1]][x] == WALL {
-			fmt.Println("ASDASDSDASDsdfsadf")
-			return false
-		} else {
-			// Move the robot on the first found index
-			s.DataProvider.GetArea()[filter[0][0]][x] = ROBOT
-			s.DataProvider.GetArea()[filter[0][0]-1][x] = BLANK
-
-			fmt.Println("ASDASD")
-			// Shift the boxes by one to the right
-			for i := 0; i < len(filtered_boxes[len(filtered_boxes)-1]); i++ {
-				s.DataProvider.GetArea()[filter[0][0]+1+i][x] = BOX
-			}
-
-		}
-	}
-
-	return true
-}
-
-func (s *Solution) PushAxisYnew(d string) bool {
+func (s *Solution) MovementYAxisStraight(d string) bool {
 
 	y, x := s.FindRobotPosition(s.DataProvider.GetArea())
 
@@ -283,23 +112,6 @@ func (s *Solution) PushAxisYnew(d string) bool {
 		if s.DataProvider.GetArea()[y-1][x] == WALL {
 			return false
 		}
-		// if boxes_count <= 0 || s.DataProvider.GetArea()[y-1][x] != BOX {
-		// 	s.DataProvider.GetArea()[y][x] = BLANK
-		// 	s.DataProvider.GetArea()[y-1][x] = ROBOT
-		// 	return true
-		// }
-		// for i := wall_y + 1; i <= y; i++ {
-		// 	if boxes_count > 0 {
-		// 		s.DataProvider.GetArea()[i][x] = BOX
-		// 		boxes_count--
-		// 	} else if boxes_count == 0 {
-		// 		s.DataProvider.GetArea()[i][x] = ROBOT
-		// 		boxes_count--
-		// 	} else {
-		// 		s.DataProvider.GetArea()[i][x] = BLANK
-		// 	}
-		// }
-		// fmt.Println("line expected: ", s.DataProvider.GetArea()[y])
 
 		// Convert to a vertical slice. TOP-DOWN
 		vertical_line := ""
@@ -310,12 +122,6 @@ func (s *Solution) PushAxisYnew(d string) bool {
 		boxesMatch, _ := regexp.Compile("O+")
 		boxes := boxesMatch.FindAllString(vertical_line, -1)
 		indexes := boxesMatch.FindAllStringIndex(vertical_line, -1)
-
-		// if len(boxes) == 0 {
-		// 	s.DataProvider.GetArea()[y][x] = BLANK
-		// 	s.DataProvider.GetArea()[y-1][x] = ROBOT
-		// 	return true
-		// }
 
 		// Filtering the indexes with garbage collection
 		filter := indexes[:0]
@@ -339,30 +145,22 @@ func (s *Solution) PushAxisYnew(d string) bool {
 			return true
 		}
 
-		//fmt.Println("TOPSTART! ", filter)
-		//fmt.Println(filtered_boxes)
-		//fmt.Println("Edge case", s.DataProvider.GetArea()[filter[len(filter)-1][0]-1][x])
-
 		// If the boxes are further than 1 from the robot, move the robot and fajrant
 		if filter[len(filter)-1][1] != y {
 			s.DataProvider.GetArea()[y][x] = BLANK
 			s.DataProvider.GetArea()[y-1][x] = ROBOT
-			//fmt.Println("ASDASDSDASD")
 			return true
 		} else if s.DataProvider.GetArea()[filter[len(filter)-1][0]-1][x] == WALL {
-			//fmt.Println("ASDASDASFEFWW#CWECWE")
 			return false
 		} else {
 			// Move the robot on the first found index
 			s.DataProvider.GetArea()[filter[len(filter)-1][1]-1][x] = ROBOT
 			s.DataProvider.GetArea()[filter[len(filter)-1][1]][x] = BLANK
 
-			//fmt.Println("ASDASDD")
 			// Shift the boxes by one to the right
 			for i := 0; i < len(filtered_boxes[len(filtered_boxes)-1]); i++ {
 				s.DataProvider.GetArea()[filter[len(filter)-1][0]-1+i][x] = BOX
 			}
-
 		}
 	case C_DOWN:
 		if s.DataProvider.GetArea()[y+1][x] == WALL {
@@ -377,12 +175,6 @@ func (s *Solution) PushAxisYnew(d string) bool {
 		boxes := boxesMatch.FindAllString(vertical_line, -1)
 		indexes := boxesMatch.FindAllStringIndex(vertical_line, -1)
 
-		// if len(boxes) == 0 {
-		// 	s.DataProvider.GetArea()[y][x] = BLANK
-		// 	s.DataProvider.GetArea()[y+1][x] = ROBOT
-		// 	return true
-		// }
-
 		// Filtering the indexes with garbage collection
 		filter := indexes[:0]
 		filtered_boxes := boxes[:0]
@@ -405,111 +197,64 @@ func (s *Solution) PushAxisYnew(d string) bool {
 			return true
 		}
 
-		//fmt.Println("DOWNSTART! ", filter)
-		//fmt.Println(filtered_boxes)
-
 		// If the boxes are further than 1 from the robot, move the robot and fajrant
 		if math.Abs(float64(filter[0][0]-y)) != 1 {
 			s.DataProvider.GetArea()[y][x] = BLANK
 			s.DataProvider.GetArea()[y+1][x] = ROBOT
-			//fmt.Println("ASDASDSDASD")
 			return true
 		} else if s.DataProvider.GetArea()[filter[0][1]][x] == WALL {
-			//fmt.Println("ASDASDSDASDsdfsadf")
 			return false
 		} else {
 			// Move the robot on the first found index
 			s.DataProvider.GetArea()[filter[0][0]][x] = ROBOT
 			s.DataProvider.GetArea()[filter[0][0]-1][x] = BLANK
 
-			//fmt.Println("ASDASDAAA")
 			// Shift the boxes by one to the right
 			for i := 0; i < len(filtered_boxes[0]); i++ {
 				s.DataProvider.GetArea()[filter[0][0]+1+i][x] = BOX
 			}
-
 		}
 	}
 
 	return true
 }
 
-func (s *Solution) SearchForWallAndBoxesAtX(y, x int, direction string) (int, int) {
-	// Oribl
-	if !s.IsPointSafe(s.DataProvider.GetArea(), y, x) {
-		return -1, -1
-	}
+// func (s *Solution) SearchForWallAndBoxesAtX(y, x int, direction string) (int, int) {
+// 	// Oribl
+// 	if !s.IsPointSafe(s.DataProvider.GetArea(), y, x) {
+// 		return -1, -1
+// 	}
 
-	boxes_count := 0
+// 	boxes_count := 0
 
-	wallMatch, _ := regexp.Compile("#")
-	boxesMatch, _ := regexp.Compile("O")
+// 	wallMatch, _ := regexp.Compile("#")
+// 	boxesMatch, _ := regexp.Compile("O")
 
-	switch direction {
-	case C_RIGHT:
-		for t_x := x; t_x < len(s.DataProvider.GetArea()[y]); t_x++ {
-			if boxesMatch.Match([]byte(s.DataProvider.GetArea()[y][t_x])) {
-				boxes_count++
-			}
-			if wallMatch.Match([]byte(s.DataProvider.GetArea()[y][t_x])) {
-				return t_x, boxes_count
-			}
-		}
-	case C_LEFT:
-		for t_x := x; t_x >= 0; t_x-- {
-			if boxesMatch.Match([]byte(s.DataProvider.GetArea()[y][t_x])) {
-				boxes_count++
-			}
-			if wallMatch.Match([]byte(s.DataProvider.GetArea()[y][t_x])) {
-				return t_x, boxes_count
-			}
-		}
-	}
+// 	switch direction {
+// 	case C_RIGHT:
+// 		for t_x := x; t_x < len(s.DataProvider.GetArea()[y]); t_x++ {
+// 			if boxesMatch.Match([]byte(s.DataProvider.GetArea()[y][t_x])) {
+// 				boxes_count++
+// 			}
+// 			if wallMatch.Match([]byte(s.DataProvider.GetArea()[y][t_x])) {
+// 				return t_x, boxes_count
+// 			}
+// 		}
+// 	case C_LEFT:
+// 		for t_x := x; t_x >= 0; t_x-- {
+// 			if boxesMatch.Match([]byte(s.DataProvider.GetArea()[y][t_x])) {
+// 				boxes_count++
+// 			}
+// 			if wallMatch.Match([]byte(s.DataProvider.GetArea()[y][t_x])) {
+// 				return t_x, boxes_count
+// 			}
+// 		}
+// 	}
 
-	return -1, -1
-}
+// 	return -1, -1
+// }
 
-func (s *Solution) SearchForWallAndBoxesAtXw(y, x int, direction string) (int, int) {
-	// Oribl
-	if !s.IsPointSafe(s.DataProvider.GetArea(), y, x) {
-		return -1, -1
-	}
-
-	boxes_count := 0
-
-	wallMatch, _ := regexp.Compile("#")
-	boxesMatch, _ := regexp.Compile("O+")
-
-	for _, c := range "TEST" {
-		fmt.Println("RUNE", c)
-	}
-
-	switch direction {
-	case C_RIGHT:
-		slices.Concat(s.DataProvider.GetArea()[y])
-		for t_x := x; t_x < len(s.DataProvider.GetArea()[y]); t_x++ {
-			if boxesMatch.Match([]byte(s.DataProvider.GetArea()[y][t_x])) {
-				boxes_count++
-			}
-			if wallMatch.Match([]byte(s.DataProvider.GetArea()[y][t_x])) {
-				return t_x, boxes_count
-			}
-		}
-	case C_LEFT:
-		for t_x := x; t_x >= 0; t_x-- {
-			if boxesMatch.Match([]byte(s.DataProvider.GetArea()[y][t_x])) {
-				boxes_count++
-			}
-			if wallMatch.Match([]byte(s.DataProvider.GetArea()[y][t_x])) {
-				return t_x, boxes_count
-			}
-		}
-	}
-
-	return -1, -1
-}
-
-func (s *Solution) PushAxisXnew(d string) bool {
+func (s *Solution) MovementXAxisStraight(d string) bool {
 	/*
 		I see It this way.
 		- Seek the position of the robot
@@ -581,20 +326,6 @@ func (s *Solution) PushAxisXnew(d string) bool {
 		for i := 0; i < len(filtered_boxes[0]); i++ {
 			s.DataProvider.GetArea()[y][filter[0][1]-i] = BOX
 		}
-
-		// // That is wrong
-		// for i := wall_x - 1; i >= x; i-- {
-		// 	if boxes_count > 0 {
-		// 		s.DataProvider.GetArea()[y][i] = BOX
-		// 		boxes_count--
-		// 	} else if boxes_count == 0 {
-		// 		s.DataProvider.GetArea()[y][i] = ROBOT
-		// 		boxes_count--
-		// 	} else {
-		// 		s.DataProvider.GetArea()[y][i] = BLANK
-		// 	}
-		// }
-		//fmt.Println("line expected: ", s.DataProvider.GetArea()[y])
 	case C_LEFT:
 		if s.DataProvider.GetArea()[y][x-1] == WALL {
 			return false
@@ -619,12 +350,8 @@ func (s *Solution) PushAxisXnew(d string) bool {
 			indexes[i] = nil // or the zero value of T
 		}
 
-		fmt.Println(filter)
-		fmt.Println(filtered_boxes)
-
 		// If all of the boxes are on the opposite side, move and fajrant
 		if len(filter) == 0 || len(filtered_boxes) == 0 {
-			//fmt.Println("AASDASDSDASDQWW")
 			s.DataProvider.GetArea()[y][x] = BLANK
 			s.DataProvider.GetArea()[y][x-1] = ROBOT
 			return true
@@ -646,206 +373,10 @@ func (s *Solution) PushAxisXnew(d string) bool {
 		s.DataProvider.GetArea()[y][filter[len(filter)-1][1]-1] = ROBOT
 		s.DataProvider.GetArea()[y][x] = BLANK
 
-		//fmt.Println("asdasd131231231a")
 		// Shift the boxes by one to the right
 		for i := 0; i < len(filtered_boxes[len(filtered_boxes)-1]); i++ {
 			s.DataProvider.GetArea()[y][filter[len(filter)-1][1]-2-i] = BOX
 		}
-
-	}
-
-	return true
-}
-
-func (s *Solution) PushAxisX(d string) bool {
-	/*
-		I see It this way.
-		- Seek the position of the robot
-		- Seek the nearest wall to the specified direction
-		- While seeking the wall, count boxes that can be shifted
-		- Calculate the delta distance between the robot and the wall
-		- delta will be equal to empty space + robot + boxes.
-		- rearrange the room in the span of this delta to first have the boxes
-		- then robot
-		- then empty space
-	*/
-
-	y, x := s.FindRobotPosition(s.DataProvider.GetArea())
-
-	wall_x, boxes_count := s.SearchForWallAndBoxesAtX(y, x, d)
-
-	delta_x := int(math.Abs(math.Abs(float64(wall_x)) - math.Abs(float64(x))))
-
-	blank_spaces := delta_x - boxes_count
-
-	fmt.Println("y: ", y, " x:", x, " wall_x: ", wall_x, " boxes_count: ",
-		boxes_count, " delta_x: ", delta_x, " blanks: ", blank_spaces)
-
-	// Stands near/at a wall
-	if delta_x <= 1 {
-		return false
-	}
-
-	// Already pushed what was possible to push
-	if blank_spaces == 0 {
-		return false
-	}
-
-	if boxes_count <= 0 {
-
-	}
-
-	switch d {
-	case C_RIGHT:
-		boxesMatch, _ := regexp.Compile("O+")
-		boxes := boxesMatch.FindAllString(strings.Join(s.DataProvider.GetArea()[y], ""), -1)
-		indexes := boxesMatch.FindAllStringIndex(strings.Join(s.DataProvider.GetArea()[y], ""), -1)
-
-		if boxes == nil {
-			s.DataProvider.GetArea()[y][x] = BLANK
-			s.DataProvider.GetArea()[y][x+1] = ROBOT
-			return true
-		}
-
-		// Filtering the indexes with garbage collection
-		filter := indexes[:0]
-		filtered_boxes := boxes[:0]
-
-		for i, candidate := range indexes {
-			if candidate[0] > x {
-				filter = append(filter, candidate)
-				filtered_boxes = append(filtered_boxes, boxes[i])
-			}
-		}
-
-		for i := len(filter); i < len(indexes); i++ {
-			indexes[i] = nil // or the zero value of T
-		}
-
-		// If all of the boxes are on the opposite side, move and fajrant
-		if len(filter) == 0 {
-			s.DataProvider.GetArea()[y][x] = BLANK
-			s.DataProvider.GetArea()[y][x+1] = ROBOT
-			return true
-		}
-
-		// If the index succeeding the found box(es) is a wall, get out
-		if s.DataProvider.GetArea()[y][filter[0][1]] == WALL {
-			return false
-		}
-
-		// If the boxes are further than 1 from the robot, move the robot and fajrant
-		if math.Abs(float64(filter[0][0]-x)) != 1 {
-			s.DataProvider.GetArea()[y][x] = BLANK
-			s.DataProvider.GetArea()[y][x+1] = ROBOT
-			return true
-		} else {
-			// Move the robot on the first found index
-			s.DataProvider.GetArea()[y][indexes[0][0]] = ROBOT
-			s.DataProvider.GetArea()[y][x] = BLANK
-
-			// Shift the boxes by one to the right
-			for i := 0; i < len(filtered_boxes[0]); i++ {
-				s.DataProvider.GetArea()[y][filter[0][1]-i] = BOX
-			}
-
-		}
-
-		// // That is wrong
-		// for i := wall_x - 1; i >= x; i-- {
-		// 	if boxes_count > 0 {
-		// 		s.DataProvider.GetArea()[y][i] = BOX
-		// 		boxes_count--
-		// 	} else if boxes_count == 0 {
-		// 		s.DataProvider.GetArea()[y][i] = ROBOT
-		// 		boxes_count--
-		// 	} else {
-		// 		s.DataProvider.GetArea()[y][i] = BLANK
-		// 	}
-		// }
-		fmt.Println("line expected: ", s.DataProvider.GetArea()[y])
-	case C_LEFT:
-		boxesMatch, _ := regexp.Compile("O+")
-		boxes := boxesMatch.FindAllString(strings.Join(s.DataProvider.GetArea()[y], ""), -1)
-		indexes := boxesMatch.FindAllStringIndex(strings.Join(s.DataProvider.GetArea()[y], ""), -1)
-
-		if boxes == nil {
-			s.DataProvider.GetArea()[y][x] = BLANK
-			s.DataProvider.GetArea()[y][x-1] = ROBOT
-			return true
-		}
-
-		// Filtering the indexes with garbage collection
-		filter := indexes[:0]
-		filtered_boxes := boxes[:0]
-
-		for i, candidate := range indexes {
-			if candidate[1] <= x {
-				filter = append(filter, candidate)
-				filtered_boxes = append(filtered_boxes, boxes[i])
-			}
-		}
-
-		for i := len(filter); i < len(indexes); i++ {
-			indexes[i] = nil // or the zero value of T
-		}
-
-		fmt.Println(filter)
-		fmt.Println(filtered_boxes)
-
-		// If all of the boxes are on the opposite side, move and fajrant
-		if len(filter) == 0 {
-			s.DataProvider.GetArea()[y][x] = BLANK
-			s.DataProvider.GetArea()[y][x-1] = ROBOT
-			return true
-		}
-
-		if len(filtered_boxes) == 0 {
-			s.DataProvider.GetArea()[y][x] = BLANK
-			s.DataProvider.GetArea()[y][x-1] = ROBOT
-			return true
-		}
-
-		// If the index succeeding the found box(es) is a wall, get out
-		if s.DataProvider.GetArea()[y][filter[len(filter)-1][0]-1] == WALL {
-			return false
-		}
-
-		// If the boxes are further than 1 from the robot, move the robot and fajrant
-		if math.Abs(float64(filter[len(filter)-1][1]-1-x)) != 1 {
-			s.DataProvider.GetArea()[y][x] = BLANK
-			s.DataProvider.GetArea()[y][x-1] = ROBOT
-			return true
-		} else {
-			// Move the robot on the first found index
-			s.DataProvider.GetArea()[y][filter[len(filter)-1][1]-1] = ROBOT
-			s.DataProvider.GetArea()[y][x] = BLANK
-
-			fmt.Println("asdasd131231231a")
-			// Shift the boxes by one to the right
-			for i := 0; i < len(filtered_boxes[len(filtered_boxes)-1]); i++ {
-				s.DataProvider.GetArea()[y][filter[len(filter)-1][0]-1] = BOX
-			}
-
-		}
-		// if boxes_count <= 0 || s.DataProvider.GetArea()[y][x-1] != BOX {
-		// 	s.DataProvider.GetArea()[y][x] = BLANK
-		// 	s.DataProvider.GetArea()[y][x-1] = ROBOT
-		// 	return true
-		// }
-
-		// // That is wrong
-		// for i := wall_x + 1; i <= x; i++ {
-		// 	if boxes_count > 0 {
-		// 		s.DataProvider.GetArea()[y][i] = BOX
-		// 		boxes_count--
-		// 	} else if boxes_count == 0 {
-		// 		s.DataProvider.GetArea()[y][i] = ROBOT
-		// 		boxes_count--
-		// 	} else {
-		// 		s.DataProvider.GetArea()[y][i] = BLANK
-		// 	}
-		// }
 	}
 
 	return true
@@ -853,46 +384,16 @@ func (s *Solution) PushAxisX(d string) bool {
 
 func (s *Solution) Part1() int {
 	for _, command := range s.DataProvider.GetCommands() {
-		// if i > 5 {
-		// 	break
-		// }
-		//y, x := s.FindRobotPosition(s.DataProvider.GetArea())
 		switch command {
 		case C_TOP:
-			//
-			fmt.Println("Command top")
-			// if s.DataProvider.GetArea()[y-1][x] == WALL {
-			// 	continue
-			// }
-			s.PushAxisYnew(C_TOP)
-
+			s.MovementYAxisStraight(C_TOP)
 		case C_RIGHT:
-			//
-			fmt.Println("Command right")
-			// if s.DataProvider.GetArea()[y][x+1] == WALL {
-			// 	continue
-			// }
-			s.PushAxisXnew(C_RIGHT)
-
+			s.MovementXAxisStraight(C_RIGHT)
 		case C_DOWN:
-			//
-			fmt.Println("Command down")
-			// if s.DataProvider.GetArea()[y+1][x] == WALL {
-			// 	continue
-			// }
-			s.PushAxisYnew(C_DOWN)
-
+			s.MovementYAxisStraight(C_DOWN)
 		case C_LEFT:
-			//
-			fmt.Println("Command left")
-			// if s.DataProvider.GetArea()[y][x-1] == WALL {
-			// 	continue
-			// }
-			s.PushAxisXnew(C_LEFT)
+			s.MovementXAxisStraight(C_LEFT)
 		}
-		// for _, line := range s.DataProvider.GetArea() {
-		// 	fmt.Println(line)
-		// }
 	}
 
 	res := 0
@@ -981,7 +482,8 @@ func (s *Stack[T]) Push(point T) {
 
 // LIFO
 func (s *Stack[T]) Pop() T {
-	// That is the drawback of generics, safety check in code, not in DS
+	// That is the drawback of generics,
+	// safety check in code, not in DS
 	point := s.items[0]
 	s.items = s.items[1:]
 	return point
@@ -997,21 +499,19 @@ func (s *Solution) ContainsPoint(points [][]int, y, x int) bool {
 }
 
 func (s *Solution) IsInBoxesGroup(area [][]string, points [][]int, y, x, starting_y, starting_x int, dir string) bool {
-	fmt.Println("Myslu nad< ", y, x)
-
 	if dir == C_DOWN {
-		// Start
+
+		// Init step
 		if area[y][x] == BOX_LEFT && area[y-1][x] == ROBOT ||
 			area[y][x] == BOX_RIGHT && area[y-1][x] == ROBOT ||
 			area[y][x] == BOX_LEFT && area[y-1][x+1] == ROBOT ||
 			area[y][x] == BOX_RIGHT && area[y-1][x-1] == ROBOT {
-			fmt.Println("DOOOO12312DD")
 			return true
 		}
 
+		// Straight up-down
 		if area[y][x] == BOX_LEFT && area[y-1][x] == BOX_LEFT && s.ContainsPoint(points, y-1, x) ||
 			area[y][x] == BOX_RIGHT && area[y-1][x] == BOX_RIGHT && s.ContainsPoint(points, y-1, x) {
-			fmt.Println("DOOOODDAWSDAD")
 			return true
 		}
 
@@ -1022,89 +522,38 @@ func (s *Solution) IsInBoxesGroup(area [][]string, points [][]int, y, x, startin
 			area[y][x] == BOX_RIGHT && area[y-1][x-1] == BOX_RIGHT && s.ContainsPoint(points, y-1, x-1) ||
 			area[y][x] == BOX_RIGHT && area[y-1][x] == BOX_LEFT && s.ContainsPoint(points, y-1, x) ||
 			area[y][x] == BOX_LEFT && area[y-1][x] == BOX_RIGHT && s.ContainsPoint(points, y-1, x) {
-			fmt.Println("DOOOODD")
 			return true
 		}
 	}
 
 	if dir == C_TOP {
 
+		// Init step
 		if area[y][x] == BOX_LEFT && area[y+1][x] == ROBOT ||
 			area[y][x] == BOX_RIGHT && area[y+1][x] == ROBOT ||
 			area[y][x] == BOX_LEFT && area[y+1][x+1] == ROBOT ||
 			area[y][x] == BOX_RIGHT && area[y+1][x-1] == ROBOT {
-			fmt.Println("DOOOO12312DD")
 			return true
 		}
 
+		// Straight up-down
 		if area[y][x] == BOX_LEFT && area[y+1][x] == BOX_LEFT && s.ContainsPoint(points, y+1, x) ||
 			area[y][x] == BOX_RIGHT && area[y+1][x] == BOX_RIGHT && s.ContainsPoint(points, y+1, x) {
-			fmt.Println("DOOOODDAWSDAD")
 			return true
 		}
 
-		// Halfstacking down-movement
-		// Cross checked left up with left down and added
+		// Halfstacking top-movement
 		if area[y][x] == BOX_LEFT && area[y+1][x-1] == BOX_LEFT && s.ContainsPoint(points, y+1, x-1) ||
 			area[y][x] == BOX_LEFT && area[y+1][x+1] == BOX_LEFT && s.ContainsPoint(points, y+1, x+1) ||
 			area[y][x] == BOX_RIGHT && area[y+1][x+1] == BOX_RIGHT && s.ContainsPoint(points, y+1, x+1) ||
 			area[y][x] == BOX_RIGHT && area[y+1][x-1] == BOX_RIGHT && s.ContainsPoint(points, y+1, x-1) ||
 			area[y][x] == BOX_RIGHT && area[y+1][x] == BOX_LEFT && s.ContainsPoint(points, y+1, x) ||
 			area[y][x] == BOX_LEFT && area[y+1][x] == BOX_RIGHT && s.ContainsPoint(points, y+1, x) {
-			fmt.Println("DOOOODD")
 			return true
 		}
 
-		// if y >= starting_y {
-		// 	return false
-		// }
-
-		// if area[y][x] == BOX_LEFT && area[y-1][x] == BOX_LEFT ||
-		// 	area[y][x] == BOX_RIGHT && area[y-1][x] == BOX_RIGHT {
-		// 	fmt.Println("W PIZDE")
-		// 	return true
-		// }
-
-		// // Halfstacking up-movement
-		// if area[y][x] == BOX_LEFT && area[y+1][x-1] == BOX_LEFT ||
-		// 	area[y][x] == BOX_LEFT && area[y+1][x] == BOX_RIGHT ||
-		// 	area[y][x] == BOX_RIGHT && area[y+1][x+1] == BOX_RIGHT ||
-		// 	area[y][x] == BOX_RIGHT && area[y+1][x] == BOX_LEFT {
-		// 	fmt.Println("KURWA")
-		// 	return true
-		// }
 	}
 
-	// // Up down columns, without half-stacking
-	// if area[y][x] == BOX_LEFT && area[y-1][x] == BOX_LEFT ||
-	// 	area[y][x] == BOX_RIGHT && area[y-1][x] == BOX_RIGHT ||
-	// 	area[y][x] == BOX_LEFT && area[y+1][x] == BOX_LEFT ||
-	// 	area[y][x] == BOX_RIGHT && area[y+1][x] == BOX_RIGHT {
-	// 	return true
-	// }
-
-	// // Halfstacking down-movement
-	// if area[y][x] == BOX_LEFT && area[y-1][x+1] == BOX_LEFT ||
-	// 	area[y][x] == BOX_RIGHT && area[y-1][x] == BOX_LEFT ||
-	// 	area[y][x] == BOX_RIGHT && area[y-1][x-1] == BOX_RIGHT ||
-	// 	area[y][x] == BOX_LEFT && area[y-1][x] == BOX_RIGHT {
-	// 	return true
-	// }
-
-	// // Halfstacking up-movement
-	// if area[y][x] == BOX_LEFT && area[y+1][x-1] == BOX_LEFT ||
-	// 	area[y][x] == BOX_LEFT && area[y+1][x] == BOX_RIGHT ||
-	// 	area[y][x] == BOX_RIGHT && area[y+1][x+1] == BOX_RIGHT ||
-	// 	area[y][x] == BOX_RIGHT && area[y+1][x] == BOX_LEFT {
-	// 	return true
-	// }
-
-	// Closing
-	// if (area[y][x] == BOX_LEFT && area[y][x+1] == BOX_RIGHT) ||
-	// 	(area[y][x] == BOX_RIGHT && area[y][x-1] == BOX_LEFT) {
-	// 	fmt.Println("CHU")
-	// 	return true
-	// }
 	return false
 }
 

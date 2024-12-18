@@ -58,8 +58,8 @@ func (d *DataProvider) TakeInput(path string) bool {
 		return false
 	}
 
-	logging.Info("Successfully saved the input to DataProvider{}", "path", path,
-		"area", d.Area, "commands", d.Commands)
+	// logging.Info("Successfully saved the input to DataProvider{}", "path", path,
+	// 	"area", d.Area, "commands", d.Commands)
 	return true
 }
 

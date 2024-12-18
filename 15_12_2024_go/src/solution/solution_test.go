@@ -42,7 +42,7 @@ func TestPushAxisXRightAtY1X2inDescExample(t *testing.T) {
 	// The wanted method invocation
 	// Given #.@O.O.#
 	fmt.Println("line expected: ", testSolution.DataProvider.GetArea()[1])
-	pushResult := testSolution.PushAxisXnew(C_RIGHT)
+	pushResult := testSolution.MovementXAxisStraight(C_RIGHT)
 
 	// Expected results
 	assert.True(t, pushResult)
