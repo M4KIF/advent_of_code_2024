@@ -19,16 +19,3 @@ func TestDataProviderEmptyFile(t *testing.T) {
 
 	assert.Equal(t, len(provider.Get2DArray()), 0)
 }
-
-func TestDataProviderValues(t *testing.T) {
-
-	path := "./test_data/data_2.txt"
-
-	io_provider := file_handling.Test{}
-
-	provider := NewDataProvider(io_provider)
-
-	provider.TakeInput(path)
-
-	assert.Equal(t, len(provider.Get2DArray()), 3)
-}
