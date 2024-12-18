@@ -38,8 +38,9 @@ var (
 	I_LEFT  = 1
 
 	// Movement Arrays
-	movement_y = []int{0, 0, -1, 1}
-	movement_x = []int{1, -1, 0, 0}
+
+	movement_y = []int{1, 1, 1, -1, -1, -1}
+	movement_x = []int{1, -1, 0, 0, 1, -1}
 )
 
 func NewSolution(dataProvider interfaces.String2Dand1Darray, path string) *Solution {
@@ -127,9 +128,9 @@ func (s *Solution) PushAxisY(d string) bool {
 
 	switch d {
 	case C_TOP:
-		// if boxes_count <= 0 || s.DataProvider.GetArea()[y+movement_y[I_TOP]][x] != BOX {
+		// if boxes_count <= 0 || s.DataProvider.GetArea()[y-1][x] != BOX {
 		// 	s.DataProvider.GetArea()[y][x] = BLANK
-		// 	s.DataProvider.GetArea()[y+movement_y[I_TOP]][x] = ROBOT
+		// 	s.DataProvider.GetArea()[y-1][x] = ROBOT
 		// 	return true
 		// }
 		// for i := wall_y + 1; i <= y; i++ {
@@ -157,7 +158,7 @@ func (s *Solution) PushAxisY(d string) bool {
 
 		if boxes == nil {
 			s.DataProvider.GetArea()[y][x] = BLANK
-			s.DataProvider.GetArea()[y][x+movement_x[I_RIGHT]] = ROBOT
+			s.DataProvider.GetArea()[y][x+1] = ROBOT
 			return true
 		}
 
@@ -179,7 +180,7 @@ func (s *Solution) PushAxisY(d string) bool {
 		// If all of the boxes are on the opposite side, move and fajrant
 		if len(filter) == 0 {
 			s.DataProvider.GetArea()[y][x] = BLANK
-			s.DataProvider.GetArea()[y+movement_y[I_TOP]][x] = ROBOT
+			s.DataProvider.GetArea()[y-1][x] = ROBOT
 			return true
 		}
 
@@ -189,7 +190,7 @@ func (s *Solution) PushAxisY(d string) bool {
 		// If the boxes are further than 1 from the robot, move the robot and fajrant
 		if filter[len(filter)-1][1] != y {
 			s.DataProvider.GetArea()[y][x] = BLANK
-			s.DataProvider.GetArea()[y+movement_y[I_TOP]][x] = ROBOT
+			s.DataProvider.GetArea()[y-1][x] = ROBOT
 			fmt.Println("ASDASDSDASD")
 			return true
 		} else if s.DataProvider.GetArea()[y][filter[len(filter)-1][0]-1] == WALL {
@@ -218,7 +219,7 @@ func (s *Solution) PushAxisY(d string) bool {
 
 		if boxes == nil {
 			s.DataProvider.GetArea()[y][x] = BLANK
-			s.DataProvider.GetArea()[y][x+movement_x[I_RIGHT]] = ROBOT
+			s.DataProvider.GetArea()[y][x+1] = ROBOT
 			return true
 		}
 
@@ -240,7 +241,7 @@ func (s *Solution) PushAxisY(d string) bool {
 		// If all of the boxes are on the opposite side, move and fajrant
 		if len(filter) == 0 {
 			s.DataProvider.GetArea()[y][x] = BLANK
-			s.DataProvider.GetArea()[y+movement_y[I_DOWN]][x] = ROBOT
+			s.DataProvider.GetArea()[y+1][x] = ROBOT
 			return true
 		}
 
@@ -250,7 +251,7 @@ func (s *Solution) PushAxisY(d string) bool {
 		// If the boxes are further than 1 from the robot, move the robot and fajrant
 		if math.Abs(float64(filter[0][0]-y)) != 1 {
 			s.DataProvider.GetArea()[y][x] = BLANK
-			s.DataProvider.GetArea()[y+movement_y[I_DOWN]][x] = ROBOT
+			s.DataProvider.GetArea()[y+1][x] = ROBOT
 			fmt.Println("ASDASDSDASD")
 			return true
 		} else if s.DataProvider.GetArea()[filter[0][1]][x] == WALL {
@@ -279,12 +280,12 @@ func (s *Solution) PushAxisYnew(d string) bool {
 
 	switch d {
 	case C_TOP:
-		if s.DataProvider.GetArea()[y+movement_y[I_TOP]][x] == WALL {
+		if s.DataProvider.GetArea()[y-1][x] == WALL {
 			return false
 		}
-		// if boxes_count <= 0 || s.DataProvider.GetArea()[y+movement_y[I_TOP]][x] != BOX {
+		// if boxes_count <= 0 || s.DataProvider.GetArea()[y-1][x] != BOX {
 		// 	s.DataProvider.GetArea()[y][x] = BLANK
-		// 	s.DataProvider.GetArea()[y+movement_y[I_TOP]][x] = ROBOT
+		// 	s.DataProvider.GetArea()[y-1][x] = ROBOT
 		// 	return true
 		// }
 		// for i := wall_y + 1; i <= y; i++ {
@@ -312,7 +313,7 @@ func (s *Solution) PushAxisYnew(d string) bool {
 
 		// if len(boxes) == 0 {
 		// 	s.DataProvider.GetArea()[y][x] = BLANK
-		// 	s.DataProvider.GetArea()[y+movement_y[I_TOP]][x] = ROBOT
+		// 	s.DataProvider.GetArea()[y-1][x] = ROBOT
 		// 	return true
 		// }
 
@@ -334,7 +335,7 @@ func (s *Solution) PushAxisYnew(d string) bool {
 		// If all of the boxes are on the opposite side, move and fajrant
 		if len(filter) == 0 {
 			s.DataProvider.GetArea()[y][x] = BLANK
-			s.DataProvider.GetArea()[y+movement_y[I_TOP]][x] = ROBOT
+			s.DataProvider.GetArea()[y-1][x] = ROBOT
 			return true
 		}
 
@@ -345,7 +346,7 @@ func (s *Solution) PushAxisYnew(d string) bool {
 		// If the boxes are further than 1 from the robot, move the robot and fajrant
 		if filter[len(filter)-1][1] != y {
 			s.DataProvider.GetArea()[y][x] = BLANK
-			s.DataProvider.GetArea()[y+movement_y[I_TOP]][x] = ROBOT
+			s.DataProvider.GetArea()[y-1][x] = ROBOT
 			//fmt.Println("ASDASDSDASD")
 			return true
 		} else if s.DataProvider.GetArea()[filter[len(filter)-1][0]-1][x] == WALL {
@@ -364,7 +365,7 @@ func (s *Solution) PushAxisYnew(d string) bool {
 
 		}
 	case C_DOWN:
-		if s.DataProvider.GetArea()[y+movement_y[I_DOWN]][x] == WALL {
+		if s.DataProvider.GetArea()[y+1][x] == WALL {
 			return false
 		}
 		vertical_line := ""
@@ -378,7 +379,7 @@ func (s *Solution) PushAxisYnew(d string) bool {
 
 		// if len(boxes) == 0 {
 		// 	s.DataProvider.GetArea()[y][x] = BLANK
-		// 	s.DataProvider.GetArea()[y+movement_y[I_DOWN]][x] = ROBOT
+		// 	s.DataProvider.GetArea()[y+1][x] = ROBOT
 		// 	return true
 		// }
 
@@ -400,7 +401,7 @@ func (s *Solution) PushAxisYnew(d string) bool {
 		// If all of the boxes are on the opposite side, move and fajrant
 		if len(filter) == 0 {
 			s.DataProvider.GetArea()[y][x] = BLANK
-			s.DataProvider.GetArea()[y+movement_y[I_DOWN]][x] = ROBOT
+			s.DataProvider.GetArea()[y+1][x] = ROBOT
 			return true
 		}
 
@@ -410,7 +411,7 @@ func (s *Solution) PushAxisYnew(d string) bool {
 		// If the boxes are further than 1 from the robot, move the robot and fajrant
 		if math.Abs(float64(filter[0][0]-y)) != 1 {
 			s.DataProvider.GetArea()[y][x] = BLANK
-			s.DataProvider.GetArea()[y+movement_y[I_DOWN]][x] = ROBOT
+			s.DataProvider.GetArea()[y+1][x] = ROBOT
 			//fmt.Println("ASDASDSDASD")
 			return true
 		} else if s.DataProvider.GetArea()[filter[0][1]][x] == WALL {
@@ -525,7 +526,7 @@ func (s *Solution) PushAxisXnew(d string) bool {
 
 	switch d {
 	case C_RIGHT:
-		if s.DataProvider.GetArea()[y][x+movement_x[I_RIGHT]] == WALL {
+		if s.DataProvider.GetArea()[y][x+1] == WALL {
 			return false
 		}
 		boxesMatch, _ := regexp.Compile("O+")
@@ -534,7 +535,7 @@ func (s *Solution) PushAxisXnew(d string) bool {
 
 		if len(boxes) == 0 {
 			s.DataProvider.GetArea()[y][x] = BLANK
-			s.DataProvider.GetArea()[y][x+movement_x[I_RIGHT]] = ROBOT
+			s.DataProvider.GetArea()[y][x+1] = ROBOT
 			return true
 		}
 
@@ -556,14 +557,14 @@ func (s *Solution) PushAxisXnew(d string) bool {
 		// If all of the boxes are on the opposite side, move and fajrant
 		if len(filter) == 0 || len(filtered_boxes) == 0 {
 			s.DataProvider.GetArea()[y][x] = BLANK
-			s.DataProvider.GetArea()[y][x+movement_x[I_RIGHT]] = ROBOT
+			s.DataProvider.GetArea()[y][x+1] = ROBOT
 			return true
 		}
 
 		// If the boxes are further than 1 from the robot, move the robot and fajrant
 		if math.Abs(float64(filter[0][0]-x)) != 1 {
 			s.DataProvider.GetArea()[y][x] = BLANK
-			s.DataProvider.GetArea()[y][x+movement_x[I_RIGHT]] = ROBOT
+			s.DataProvider.GetArea()[y][x+1] = ROBOT
 			return true
 		}
 
@@ -595,7 +596,7 @@ func (s *Solution) PushAxisXnew(d string) bool {
 		// }
 		//fmt.Println("line expected: ", s.DataProvider.GetArea()[y])
 	case C_LEFT:
-		if s.DataProvider.GetArea()[y][x+movement_x[I_LEFT]] == WALL {
+		if s.DataProvider.GetArea()[y][x-1] == WALL {
 			return false
 		}
 
@@ -625,13 +626,13 @@ func (s *Solution) PushAxisXnew(d string) bool {
 		if len(filter) == 0 || len(filtered_boxes) == 0 {
 			//fmt.Println("AASDASDSDASDQWW")
 			s.DataProvider.GetArea()[y][x] = BLANK
-			s.DataProvider.GetArea()[y][x+movement_x[I_LEFT]] = ROBOT
+			s.DataProvider.GetArea()[y][x-1] = ROBOT
 			return true
 		}
 
 		if math.Abs(float64(filter[len(filter)-1][1]-1-x)) != 1 {
 			s.DataProvider.GetArea()[y][x] = BLANK
-			s.DataProvider.GetArea()[y][x+movement_x[I_LEFT]] = ROBOT
+			s.DataProvider.GetArea()[y][x-1] = ROBOT
 			return true
 		}
 
@@ -702,7 +703,7 @@ func (s *Solution) PushAxisX(d string) bool {
 
 		if boxes == nil {
 			s.DataProvider.GetArea()[y][x] = BLANK
-			s.DataProvider.GetArea()[y][x+movement_x[I_RIGHT]] = ROBOT
+			s.DataProvider.GetArea()[y][x+1] = ROBOT
 			return true
 		}
 
@@ -724,7 +725,7 @@ func (s *Solution) PushAxisX(d string) bool {
 		// If all of the boxes are on the opposite side, move and fajrant
 		if len(filter) == 0 {
 			s.DataProvider.GetArea()[y][x] = BLANK
-			s.DataProvider.GetArea()[y][x+movement_x[I_RIGHT]] = ROBOT
+			s.DataProvider.GetArea()[y][x+1] = ROBOT
 			return true
 		}
 
@@ -736,7 +737,7 @@ func (s *Solution) PushAxisX(d string) bool {
 		// If the boxes are further than 1 from the robot, move the robot and fajrant
 		if math.Abs(float64(filter[0][0]-x)) != 1 {
 			s.DataProvider.GetArea()[y][x] = BLANK
-			s.DataProvider.GetArea()[y][x+movement_x[I_RIGHT]] = ROBOT
+			s.DataProvider.GetArea()[y][x+1] = ROBOT
 			return true
 		} else {
 			// Move the robot on the first found index
@@ -770,7 +771,7 @@ func (s *Solution) PushAxisX(d string) bool {
 
 		if boxes == nil {
 			s.DataProvider.GetArea()[y][x] = BLANK
-			s.DataProvider.GetArea()[y][x+movement_x[I_LEFT]] = ROBOT
+			s.DataProvider.GetArea()[y][x-1] = ROBOT
 			return true
 		}
 
@@ -795,13 +796,13 @@ func (s *Solution) PushAxisX(d string) bool {
 		// If all of the boxes are on the opposite side, move and fajrant
 		if len(filter) == 0 {
 			s.DataProvider.GetArea()[y][x] = BLANK
-			s.DataProvider.GetArea()[y][x+movement_x[I_LEFT]] = ROBOT
+			s.DataProvider.GetArea()[y][x-1] = ROBOT
 			return true
 		}
 
 		if len(filtered_boxes) == 0 {
 			s.DataProvider.GetArea()[y][x] = BLANK
-			s.DataProvider.GetArea()[y][x+movement_x[I_LEFT]] = ROBOT
+			s.DataProvider.GetArea()[y][x-1] = ROBOT
 			return true
 		}
 
@@ -813,7 +814,7 @@ func (s *Solution) PushAxisX(d string) bool {
 		// If the boxes are further than 1 from the robot, move the robot and fajrant
 		if math.Abs(float64(filter[len(filter)-1][1]-1-x)) != 1 {
 			s.DataProvider.GetArea()[y][x] = BLANK
-			s.DataProvider.GetArea()[y][x+movement_x[I_LEFT]] = ROBOT
+			s.DataProvider.GetArea()[y][x-1] = ROBOT
 			return true
 		} else {
 			// Move the robot on the first found index
@@ -827,9 +828,9 @@ func (s *Solution) PushAxisX(d string) bool {
 			}
 
 		}
-		// if boxes_count <= 0 || s.DataProvider.GetArea()[y][x+movement_x[I_LEFT]] != BOX {
+		// if boxes_count <= 0 || s.DataProvider.GetArea()[y][x-1] != BOX {
 		// 	s.DataProvider.GetArea()[y][x] = BLANK
-		// 	s.DataProvider.GetArea()[y][x+movement_x[I_LEFT]] = ROBOT
+		// 	s.DataProvider.GetArea()[y][x-1] = ROBOT
 		// 	return true
 		// }
 
@@ -860,7 +861,7 @@ func (s *Solution) Part1() int {
 		case C_TOP:
 			//
 			fmt.Println("Command top")
-			// if s.DataProvider.GetArea()[y+movement_y[I_TOP]][x] == WALL {
+			// if s.DataProvider.GetArea()[y-1][x] == WALL {
 			// 	continue
 			// }
 			s.PushAxisYnew(C_TOP)
@@ -868,7 +869,7 @@ func (s *Solution) Part1() int {
 		case C_RIGHT:
 			//
 			fmt.Println("Command right")
-			// if s.DataProvider.GetArea()[y][x+movement_x[I_RIGHT]] == WALL {
+			// if s.DataProvider.GetArea()[y][x+1] == WALL {
 			// 	continue
 			// }
 			s.PushAxisXnew(C_RIGHT)
@@ -876,7 +877,7 @@ func (s *Solution) Part1() int {
 		case C_DOWN:
 			//
 			fmt.Println("Command down")
-			// if s.DataProvider.GetArea()[y+movement_y[I_DOWN]][x] == WALL {
+			// if s.DataProvider.GetArea()[y+1][x] == WALL {
 			// 	continue
 			// }
 			s.PushAxisYnew(C_DOWN)
@@ -884,7 +885,7 @@ func (s *Solution) Part1() int {
 		case C_LEFT:
 			//
 			fmt.Println("Command left")
-			// if s.DataProvider.GetArea()[y][x+movement_x[I_LEFT]] == WALL {
+			// if s.DataProvider.GetArea()[y][x-1] == WALL {
 			// 	continue
 			// }
 			s.PushAxisXnew(C_LEFT)
@@ -986,43 +987,92 @@ func (s *Stack[T]) Pop() T {
 	return point
 }
 
-func (s *Solution) IsInBoxesGroup(area [][]string, y, x, starting_y int, dir string) bool {
+func (s *Solution) ContainsPoint(points [][]int, y, x int) bool {
+	return slices.ContainsFunc(points, func(checked []int) bool {
+		if checked[0] == y && checked[1] == x {
+			return true
+		}
+		return false
+	})
+}
+
+func (s *Solution) IsInBoxesGroup(area [][]string, points [][]int, y, x, starting_y, starting_x int, dir string) bool {
+	fmt.Println("Myslu nad< ", y, x)
 
 	if dir == C_DOWN {
-		if y <= starting_y {
-			return false
+		// Start
+		if area[y][x] == BOX_LEFT && area[y-1][x] == ROBOT ||
+			area[y][x] == BOX_RIGHT && area[y-1][x] == ROBOT ||
+			area[y][x] == BOX_LEFT && area[y-1][x+1] == ROBOT ||
+			area[y][x] == BOX_RIGHT && area[y-1][x-1] == ROBOT {
+			fmt.Println("DOOOO12312DD")
+			return true
 		}
-		if area[y][x] == BOX_LEFT && area[y+1][x] == BOX_LEFT ||
-			area[y][x] == BOX_RIGHT && area[y+1][x] == BOX_RIGHT {
+
+		if area[y][x] == BOX_LEFT && area[y-1][x] == BOX_LEFT && s.ContainsPoint(points, y-1, x) ||
+			area[y][x] == BOX_RIGHT && area[y-1][x] == BOX_RIGHT && s.ContainsPoint(points, y-1, x) {
+			fmt.Println("DOOOODDAWSDAD")
 			return true
 		}
 
 		// Halfstacking down-movement
-		if area[y][x] == BOX_LEFT && area[y-1][x+1] == BOX_LEFT ||
-			area[y][x] == BOX_RIGHT && area[y-1][x] == BOX_LEFT ||
-			area[y][x] == BOX_RIGHT && area[y-1][x-1] == BOX_RIGHT ||
-			area[y][x] == BOX_LEFT && area[y-1][x] == BOX_RIGHT {
+		if area[y][x] == BOX_LEFT && area[y-1][x-1] == BOX_LEFT && s.ContainsPoint(points, y-1, x-1) ||
+			area[y][x] == BOX_LEFT && area[y-1][x+1] == BOX_LEFT && s.ContainsPoint(points, y-1, x+1) ||
+			area[y][x] == BOX_RIGHT && area[y-1][x+1] == BOX_RIGHT && s.ContainsPoint(points, y-1, x+1) ||
+			area[y][x] == BOX_RIGHT && area[y-1][x-1] == BOX_RIGHT && s.ContainsPoint(points, y-1, x-1) ||
+			area[y][x] == BOX_RIGHT && area[y-1][x] == BOX_LEFT && s.ContainsPoint(points, y-1, x) ||
+			area[y][x] == BOX_LEFT && area[y-1][x] == BOX_RIGHT && s.ContainsPoint(points, y-1, x) {
+			fmt.Println("DOOOODD")
 			return true
 		}
 	}
 
 	if dir == C_TOP {
-		if y >= starting_y {
-			return false
-		}
 
-		if area[y][x] == BOX_LEFT && area[y-1][x] == BOX_LEFT ||
-			area[y][x] == BOX_RIGHT && area[y-1][x] == BOX_RIGHT {
+		if area[y][x] == BOX_LEFT && area[y+1][x] == ROBOT ||
+			area[y][x] == BOX_RIGHT && area[y+1][x] == ROBOT ||
+			area[y][x] == BOX_LEFT && area[y+1][x+1] == ROBOT ||
+			area[y][x] == BOX_RIGHT && area[y+1][x-1] == ROBOT {
+			fmt.Println("DOOOO12312DD")
 			return true
 		}
 
-		// Halfstacking up-movement
-		if area[y][x] == BOX_LEFT && area[y+1][x-1] == BOX_LEFT ||
-			area[y][x] == BOX_LEFT && area[y+1][x] == BOX_RIGHT ||
-			area[y][x] == BOX_RIGHT && area[y+1][x+1] == BOX_RIGHT ||
-			area[y][x] == BOX_RIGHT && area[y+1][x] == BOX_LEFT {
+		if area[y][x] == BOX_LEFT && area[y+1][x] == BOX_LEFT && s.ContainsPoint(points, y+1, x) ||
+			area[y][x] == BOX_RIGHT && area[y+1][x] == BOX_RIGHT && s.ContainsPoint(points, y+1, x) {
+			fmt.Println("DOOOODDAWSDAD")
 			return true
 		}
+
+		// Halfstacking down-movement
+		// Cross checked left up with left down and added
+		if area[y][x] == BOX_LEFT && area[y+1][x-1] == BOX_LEFT && s.ContainsPoint(points, y+1, x-1) ||
+			area[y][x] == BOX_LEFT && area[y+1][x+1] == BOX_LEFT && s.ContainsPoint(points, y+1, x+1) ||
+			area[y][x] == BOX_RIGHT && area[y+1][x+1] == BOX_RIGHT && s.ContainsPoint(points, y+1, x+1) ||
+			area[y][x] == BOX_RIGHT && area[y+1][x-1] == BOX_RIGHT && s.ContainsPoint(points, y+1, x-1) ||
+			area[y][x] == BOX_RIGHT && area[y+1][x] == BOX_LEFT && s.ContainsPoint(points, y+1, x) ||
+			area[y][x] == BOX_LEFT && area[y+1][x] == BOX_RIGHT && s.ContainsPoint(points, y+1, x) {
+			fmt.Println("DOOOODD")
+			return true
+		}
+
+		// if y >= starting_y {
+		// 	return false
+		// }
+
+		// if area[y][x] == BOX_LEFT && area[y-1][x] == BOX_LEFT ||
+		// 	area[y][x] == BOX_RIGHT && area[y-1][x] == BOX_RIGHT {
+		// 	fmt.Println("W PIZDE")
+		// 	return true
+		// }
+
+		// // Halfstacking up-movement
+		// if area[y][x] == BOX_LEFT && area[y+1][x-1] == BOX_LEFT ||
+		// 	area[y][x] == BOX_LEFT && area[y+1][x] == BOX_RIGHT ||
+		// 	area[y][x] == BOX_RIGHT && area[y+1][x+1] == BOX_RIGHT ||
+		// 	area[y][x] == BOX_RIGHT && area[y+1][x] == BOX_LEFT {
+		// 	fmt.Println("KURWA")
+		// 	return true
+		// }
 	}
 
 	// // Up down columns, without half-stacking
@@ -1050,20 +1100,35 @@ func (s *Solution) IsInBoxesGroup(area [][]string, y, x, starting_y int, dir str
 	// }
 
 	// Closing
-	if area[y][x] == BOX_LEFT && area[y][x+1] == BOX_RIGHT ||
-		area[y][x] == BOX_RIGHT && area[y][x-1] == BOX_LEFT {
-		return true
-	}
+	// if (area[y][x] == BOX_LEFT && area[y][x+1] == BOX_RIGHT) ||
+	// 	(area[y][x] == BOX_RIGHT && area[y][x-1] == BOX_LEFT) {
+	// 	fmt.Println("CHU")
+	// 	return true
+	// }
 	return false
 }
 
-func (s *Solution) FloodFillTheYaxis(area [][]string, points *[][]int, stack *Stack[[]int], dir string, s_y int) {
-	//fmt.Println("Stack length: ", len(stack.items), " contents", stack.items)
+func (s *Solution) IsNextStepEligible(area [][]string, points [][]int, y, x, n_y, n_x int) bool {
+	// Base case
+	if area[n_y][n_x] != BOX_LEFT && area[n_y][n_x] != BOX_RIGHT {
+		return false
+	}
+
+	// if (area[n_y][n_x] == BOX_RIGHT && area[y][x] == BOX_RIGHT && n_x != x) ||
+	// 	area[n_y][n_x] == BOX_LEFT && area[y][x] == BOX_LEFT && n_x != x {
+	// 	return false
+	// }
+
+	return true
+}
+
+func (s *Solution) FloodFillTheYaxis(area [][]string, points *[][]int, stack *Stack[[]int], dir string, s_y int, s_x int) {
+	fmt.Println("Stack length: ", len(stack.items), " contents", stack.items, " dir: ", dir)
 	if !stack.IsEmpty() {
 		p := stack.Pop()
 		//fmt.Println("PROBA 1", p, " ", area[p[0]][p[1]])
 
-		if s.IsInBoxesGroup(area, p[0], p[1], s_y, dir) {
+		if s.IsInBoxesGroup(area, (*points), p[0], p[1], s_y, s_x, dir) {
 			if !slices.ContainsFunc((*points), func(checked []int) bool {
 				if checked[0] == p[0] && checked[1] == p[1] {
 					return true
@@ -1073,11 +1138,19 @@ func (s *Solution) FloodFillTheYaxis(area [][]string, points *[][]int, stack *St
 				(*points) = append((*points), p)
 			}
 			//fmt.Println("PROBA 2", (*points))
-		} else {
-			return
 		}
 
-		for i := 0; i < 4; i++ {
+		begin_i := 0
+		max_i := 0
+		if dir == C_DOWN {
+			max_i = 2
+		}
+		if dir == C_TOP {
+			begin_i = 3
+			max_i = 5
+		}
+
+		for i := begin_i; i <= max_i; i++ {
 			// if dir == C_TOP && i == I_DOWN {
 			// 	continue
 			// }
@@ -1088,10 +1161,11 @@ func (s *Solution) FloodFillTheYaxis(area [][]string, points *[][]int, stack *St
 			n_x := p[1] + movement_x[i]
 
 			if s.IsPointSafe(area, n_y, n_x) {
-				//fmt.Println("PROBA 3", n_y, " ", n_x)
-				if area[n_y][n_x] == BOX_LEFT || area[n_y][n_x] == BOX_RIGHT {
-					if !slices.ContainsFunc((*points), func(checked []int) bool {
+				fmt.Println("PROBA 3", n_y, " ", n_x)
+				if s.IsNextStepEligible(area, (*points), p[0], p[1], n_y, n_x) {
+					if !slices.ContainsFunc(stack.items, func(checked []int) bool {
 						if checked[0] == n_y && checked[1] == n_x {
+							fmt.Println("ASDAWEHEJAHO")
 							return true
 						}
 						return false
@@ -1101,7 +1175,7 @@ func (s *Solution) FloodFillTheYaxis(area [][]string, points *[][]int, stack *St
 				}
 			}
 		}
-		s.FloodFillTheYaxis(area, points, stack, dir, s_y)
+		s.FloodFillTheYaxis(area, points, stack, dir, s_y, s_x)
 	}
 }
 
@@ -1121,20 +1195,39 @@ func (s *Solution) PushAxisYpart2(area [][]string, d string) [][]string {
 
 	switch d {
 	case C_TOP:
-		if area[y+movement_y[I_TOP]][x] == WALL {
+		if area[y-1][x] == WALL {
+			return area
+		}
+		if area[y-1][x] != BOX_LEFT && area[y-1][x] != BOX_RIGHT {
+			area[y][x] = BLANK
+			area[y-1][x] = ROBOT
 			return area
 		}
 
 		//fmt.Println("TESTING @ZE IDEA")
 		points := [][]int{}
 		stack := Stack[[]int]{}
-		stack.Push([]int{y + movement_y[I_TOP], x})
-		s.FloodFillTheYaxis(area, &points, &stack, C_TOP, y)
+		stack.Push([]int{y - 1, x})
+
+		if s.IsPointSafe(area, y-1, x+1) {
+			if area[y-1][x] == BOX_LEFT {
+				stack.Push([]int{y - 1, x + 1})
+			}
+		}
+		if s.IsPointSafe(area, y-1, x-1) {
+			if area[y-1][x] == BOX_RIGHT {
+				stack.Push([]int{y - 1, x - 1})
+			}
+		}
+
+		s.FloodFillTheYaxis(area, &points, &stack, C_TOP, y-1, x)
 		//fmt.Println("Len points", len(points))
 
 		if len(points) == 0 {
-			area[y][x] = BLANK
-			area[y+movement_y[I_TOP]][x] = ROBOT
+			if area[y-1][x] != WALL {
+				area[y][x] = BLANK
+				area[y-1][x] = ROBOT
+			}
 			return area
 		}
 
@@ -1146,7 +1239,7 @@ func (s *Solution) PushAxisYpart2(area [][]string, d string) [][]string {
 		})
 
 		for _, p := range points {
-			//fmt.Println("Point", "(", p[0], ",", p[1], ")", " ", area[p[0]][p[1]])
+			fmt.Println("Point", "(", p[0], ",", p[1], ")", " ", area[p[0]][p[1]])
 
 			if area[p[0]-1][p[1]] == WALL {
 				// Wypierdalać
@@ -1167,7 +1260,7 @@ func (s *Solution) PushAxisYpart2(area [][]string, d string) [][]string {
 		area[y][x] = BLANK
 
 		// ///////////
-		// if area[y+movement_y[I_TOP]][x] == WALL {
+		// if area[y-1][x] == WALL {
 		// 	return area
 		// }
 
@@ -1213,7 +1306,7 @@ func (s *Solution) PushAxisYpart2(area [][]string, d string) [][]string {
 		// // If all of the boxes are on the opposite side, move and fajrant
 		// if len(filter) == 0 {
 		// 	area[y][x] = BLANK
-		// 	area[y+movement_y[I_TOP]][x] = ROBOT
+		// 	area[y-1][x] = ROBOT
 		// 	return area
 		// }
 
@@ -1226,7 +1319,7 @@ func (s *Solution) PushAxisYpart2(area [][]string, d string) [][]string {
 		// // If the boxes are further than 1 from the robot, move the robot and fajrant
 		// if filter[len(filter)-1][1] != y {
 		// 	area[y][x] = BLANK
-		// 	area[y+movement_y[I_TOP]][x] = ROBOT
+		// 	area[y-1][x] = ROBOT
 		// 	//fmt.Println("ASDASDSDASD")
 		// 	return area
 		// } else if area[filter[len(filter)-1][0]-1][x] == WALL {
@@ -1245,20 +1338,39 @@ func (s *Solution) PushAxisYpart2(area [][]string, d string) [][]string {
 
 		//}
 	case C_DOWN:
-		if area[y+movement_y[I_DOWN]][x] == WALL {
+		if area[y+1][x] == WALL {
+			return area
+		}
+		if area[y+1][x] != BOX_LEFT && area[y+1][x] != BOX_RIGHT {
+			area[y][x] = BLANK
+			area[y+1][x] = ROBOT
 			return area
 		}
 
 		//fmt.Println("TESTING @ZE IDEA")
 		points := [][]int{}
 		stack := Stack[[]int]{}
-		stack.Push([]int{y + movement_y[I_DOWN], x})
-		s.FloodFillTheYaxis(area, &points, &stack, C_DOWN, y)
+		stack.Push([]int{y + 1, x})
+
+		if s.IsPointSafe(area, y+1, x+1) {
+			if area[y+1][x] == BOX_LEFT {
+				stack.Push([]int{y + 1, x + 1})
+			}
+		}
+		if s.IsPointSafe(area, y+1, x-1) {
+			if area[y+1][x] == BOX_RIGHT {
+				stack.Push([]int{y + 1, x - 1})
+			}
+		}
+
+		s.FloodFillTheYaxis(area, &points, &stack, C_DOWN, y, x)
 		//fmt.Println("Len points", len(points))
 
 		if len(points) == 0 {
-			area[y][x] = BLANK
-			area[y+movement_y[I_DOWN]][x] = ROBOT
+			if area[y+1][x] != WALL {
+				area[y][x] = BLANK
+				area[y+1][x] = ROBOT
+			}
 			return area
 		}
 
@@ -1317,7 +1429,7 @@ func (s *Solution) PushAxisYpart2(area [][]string, d string) [][]string {
 		// // If all of the boxes are on the opposite side, move and fajrant
 		// if len(filter) == 0 {
 		// 	area[y][x] = BLANK
-		// 	area[y+movement_y[I_DOWN]][x] = ROBOT
+		// 	area[y+1][x] = ROBOT
 		// 	return area
 		// }
 
@@ -1327,7 +1439,7 @@ func (s *Solution) PushAxisYpart2(area [][]string, d string) [][]string {
 		// // If the boxes are further than 1 from the robot, move the robot and fajrant
 		// if math.Abs(float64(filter[0][0]-y)) != 1 {
 		// 	area[y][x] = BLANK
-		// 	area[y+movement_y[I_DOWN]][x] = ROBOT
+		// 	area[y+1][x] = ROBOT
 		// 	//fmt.Println("ASDASDSDASD")
 		// 	return area
 		// } else if area[filter[0][1]][x] == WALL {
@@ -1364,11 +1476,12 @@ func (s *Solution) PushAxisXpart2(area [][]string, d string) [][]string {
 	*/
 
 	y, x := s.FindRobotPosition(area)
+	fmt.Println("Where is ze robot ", " coords: ", y, x)
 	//fmt.Println(y, x, "EHASD")
 
 	switch d {
 	case C_RIGHT:
-		if area[y][x+movement_x[I_RIGHT]] == WALL {
+		if area[y][x+1] == WALL {
 			//fmt.Println("ASDAGEDWW")
 			return area
 		}
@@ -1394,19 +1507,16 @@ func (s *Solution) PushAxisXpart2(area [][]string, d string) [][]string {
 		// If all of the boxes are on the opposite side, move and fajrant
 		if len(filter) == 0 || len(filtered_boxes) == 0 {
 			area[y][x] = BLANK
-			area[y][x+movement_x[I_RIGHT]] = ROBOT
+			area[y][x+1] = ROBOT
 			//fmt.Println("HELO!")
 			return area
 		}
-
-		//fmt.Println(filter)
-		//fmt.Println(filtered_boxes)
 
 		// If the boxes are further than 1 from the robot, move the robot and fajrant
 		if math.Abs(float64(filter[0][0]-x)) != 1 {
 			//fmt.Println("JELO")
 			area[y][x] = BLANK
-			area[y][x+movement_x[I_RIGHT]] = ROBOT
+			area[y][x+1] = ROBOT
 			return area
 		}
 
@@ -1424,22 +1534,8 @@ func (s *Solution) PushAxisXpart2(area [][]string, d string) [][]string {
 			area[y][filter[0][1]-i] = "]"
 			area[y][filter[0][1]-1-i] = "["
 		}
-
-		// // That is wrong
-		// for i := wall_x - 1; i >= x; i-- {
-		// 	if boxes_count > 0 {
-		// 		s.DataProvider.GetArea()[y][i] = BOX
-		// 		boxes_count--
-		// 	} else if boxes_count == 0 {
-		// 		s.DataProvider.GetArea()[y][i] = ROBOT
-		// 		boxes_count--
-		// 	} else {
-		// 		s.DataProvider.GetArea()[y][i] = BLANK
-		// 	}
-		// }
-		//fmt.Println("line expected: ", s.DataProvider.GetArea()[y])
 	case C_LEFT:
-		if area[y][x+movement_x[I_LEFT]] == WALL {
+		if area[y][x-1] == WALL {
 			return area
 		}
 
@@ -1462,20 +1558,17 @@ func (s *Solution) PushAxisXpart2(area [][]string, d string) [][]string {
 			indexes[i] = nil // or the zero value of T
 		}
 
-		//fmt.Println(filter)
-		//fmt.Println(filtered_boxes)
-
 		// If all of the boxes are on the opposite side, move and fajrant
 		if len(filter) == 0 || len(filtered_boxes) == 0 {
 			//fmt.Println("AASDASDSDASDQWW")
 			area[y][x] = BLANK
-			area[y][x+movement_x[I_LEFT]] = ROBOT
+			area[y][x-1] = ROBOT
 			return area
 		}
 
 		if math.Abs(float64(filter[len(filter)-1][1]-1-x)) != 1 {
 			area[y][x] = BLANK
-			area[y][x+movement_x[I_LEFT]] = ROBOT
+			area[y][x-1] = ROBOT
 			return area
 		}
 
@@ -1489,7 +1582,6 @@ func (s *Solution) PushAxisXpart2(area [][]string, d string) [][]string {
 		area[y][filter[len(filter)-1][1]-1] = ROBOT
 		area[y][x] = BLANK
 
-		//fmt.Println("asdasd131231231a")
 		// Shift the boxes by one to the right
 		for i := 0; i < len(filtered_boxes[len(filtered_boxes)-1]); i += 2 {
 			area[y][filter[len(filter)-1][1]-2-i] = "]"
@@ -1509,6 +1601,9 @@ func (s *Solution) Part2() int {
 	}
 
 	for _, command := range s.DataProvider.GetCommands() {
+		for _, line := range area {
+			fmt.Println(line)
+		}
 		// if i > 5 {
 		// 	break
 		// }
@@ -1518,32 +1613,32 @@ func (s *Solution) Part2() int {
 		switch command {
 		case C_TOP:
 			//
-			//fmt.Println("Command top")
-			// if s.DataProvider.GetArea()[y+movement_y[I_TOP]][x] == WALL {
+			fmt.Println("Command top")
+			// if s.DataProvider.GetArea()[y-1][x] == WALL {
 			// 	continue
 			// }
 			area = s.PushAxisYpart2(area, C_TOP)
 
 		case C_RIGHT:
 			//
-			//fmt.Println("Command right")
-			// if s.DataProvider.GetArea()[y][x+movement_x[I_RIGHT]] == WALL {
+			fmt.Println("Command right")
+			// if s.DataProvider.GetArea()[y][x+1] == WALL {
 			// 	continue
 			// }
 			area = s.PushAxisXpart2(area, C_RIGHT)
 
 		case C_DOWN:
 			//
-			//fmt.Println("Command down")
-			// if s.DataProvider.GetArea()[y+movement_y[I_DOWN]][x] == WALL {
+			fmt.Println("Command down")
+			// if s.DataProvider.GetArea()[y+1][x] == WALL {
 			// 	continue
 			// }
 			area = s.PushAxisYpart2(area, C_DOWN)
 
 		case C_LEFT:
 			//
-			//fmt.Println("Command left")
-			// if s.DataProvider.GetArea()[y][x+movement_x[I_LEFT]] == WALL {
+			fmt.Println("Command left")
+			// if s.DataProvider.GetArea()[y][x-1] == WALL {
 			// 	continue
 			// }
 			area = s.PushAxisXpart2(area, C_LEFT)
@@ -1558,11 +1653,13 @@ func (s *Solution) Part2() int {
 
 	// Change for regex style
 	for y, line := range area {
-		boxesMatch, _ := regexp.Compile(`[\[\]]`)
+		boxesMatch, _ := regexp.Compile(`[\[][\]]`)
 		indexes := boxesMatch.FindAllStringIndex(strings.Join(line, ""), -1)
 		for _, index := range indexes {
+			fmt.Println(index)
 			res += y*100 + index[0]
 		}
+		fmt.Println("PRzerwa")
 	}
 
 	return res

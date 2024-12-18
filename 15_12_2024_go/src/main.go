@@ -11,8 +11,8 @@ func main() {
 	// Deps
 	crud := file_handling.Default{}
 	provider := data_provider.NewDataProvider(crud)
-	solution := solution.NewSolution(provider, "/data_test.txt")
+	solution := solution.NewSolution(provider, "/data.txt")
 
-	//logging.Info("Part1 result: ", "value", solution.Part1())
+	logging.Info("Part1 result: ", "value", solution.Part1())
 	logging.Info("Part2 result: ", "value", solution.Part2())
 }
