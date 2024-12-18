@@ -68,7 +68,7 @@ func TestPushAxisXLeftAtY1X6inDescExample(t *testing.T) {
 
 	// The wanted method invocation
 	fmt.Println("line expected: ", testSolution.DataProvider.GetArea()[1])
-	pushResult := testSolution.PushAxisXnew(C_LEFT)
+	pushResult := testSolution.MovementXAxisStraight(C_LEFT)
 
 	// Expected results
 	assert.True(t, pushResult)
@@ -94,7 +94,7 @@ func TestPushAxisXLeftAtY1X5inDescExample(t *testing.T) {
 
 	// The wanted method invocation
 	fmt.Println("line expected: ", testSolution.DataProvider.GetArea()[1])
-	pushResult := testSolution.PushAxisXnew(C_LEFT)
+	pushResult := testSolution.MovementXAxisStraight(C_LEFT)
 
 	// Expected results
 	assert.True(t, pushResult)
@@ -120,7 +120,7 @@ func TestPushAxisXLeftAtY1X5BoToTheRightShouldNotCountinDescExample(t *testing.T
 
 	// The wanted method invocation
 	fmt.Println("line expected: ", testSolution.DataProvider.GetArea()[1])
-	pushResult := testSolution.PushAxisXnew(C_LEFT)
+	pushResult := testSolution.MovementXAxisStraight(C_LEFT)
 
 	// Expected results
 	assert.True(t, pushResult)
@@ -146,7 +146,7 @@ func TestPushAxisXLeftAtY1X4TwoPushDescExample(t *testing.T) {
 
 	// The wanted method invocation
 	fmt.Println("line expected: ", testSolution.DataProvider.GetArea()[1])
-	pushResult := testSolution.PushAxisXnew(C_LEFT)
+	pushResult := testSolution.MovementXAxisStraight(C_LEFT)
 
 	// Expected results
 	assert.True(t, pushResult)
@@ -173,7 +173,7 @@ func TestPushAxisXRightAtY1X3inDescExample(t *testing.T) {
 	// The wanted method invocation
 	// Given #.@O.O.#
 	fmt.Println("line expected: ", testSolution.DataProvider.GetArea()[1])
-	pushResult := testSolution.PushAxisXnew(C_RIGHT)
+	pushResult := testSolution.MovementXAxisStraight(C_RIGHT)
 
 	// Expected results
 	assert.True(t, pushResult)
@@ -195,7 +195,7 @@ func TestPushAxisXLeftAtY4X5inDescExample(t *testing.T) {
 	// The wanted method invocation
 	// Given #.#.O@.#
 	fmt.Println("line expected: ", testSolution.DataProvider.GetArea()[4])
-	pushResult := testSolution.PushAxisXnew(C_LEFT)
+	pushResult := testSolution.MovementXAxisStraight(C_LEFT)
 
 	// Expected results
 	assert.True(t, pushResult)
@@ -238,7 +238,7 @@ func TestPushAxisYDownAtY1X2PushDownOneinDescExample(t *testing.T) {
 	fmt.Println(testSolution.DataProvider.GetArea()[7][2])
 
 	// The wanted method invocation
-	pushResult := testSolution.PushAxisYnew(C_DOWN)
+	pushResult := testSolution.MovementYAxisStraight(C_DOWN)
 
 	// Expected results
 	assert.True(t, pushResult)
@@ -288,7 +288,7 @@ func TestPushAxisYDownAtY2X2PushTwoBoxesinDescExample(t *testing.T) {
 	fmt.Println(testSolution.DataProvider.GetArea()[7][2])
 
 	// The wanted method invocation
-	pushResult := testSolution.PushAxisYnew(C_DOWN)
+	pushResult := testSolution.MovementYAxisStraight(C_DOWN)
 
 	fmt.Println(testSolution.DataProvider.GetArea()[0][2])
 	fmt.Println(testSolution.DataProvider.GetArea()[1][2])
@@ -347,7 +347,7 @@ func TestPushAxisYUPAtY3X2PushTwoBoxesinDescExample(t *testing.T) {
 	fmt.Println(testSolution.DataProvider.GetArea()[7][2])
 
 	// The wanted method invocation
-	pushResult := testSolution.PushAxisYnew(C_TOP)
+	pushResult := testSolution.MovementYAxisStraight(C_TOP)
 
 	fmt.Println(testSolution.DataProvider.GetArea()[0][2])
 	fmt.Println(testSolution.DataProvider.GetArea()[1][2])
@@ -406,7 +406,7 @@ func TestPushAxisYUPAtY6X2PushTwoBoxesinDescExample(t *testing.T) {
 	fmt.Println(testSolution.DataProvider.GetArea()[7][2])
 
 	// The wanted method invocation
-	pushResult := testSolution.PushAxisYnew(C_TOP)
+	pushResult := testSolution.MovementYAxisStraight(C_TOP)
 
 	fmt.Println(testSolution.DataProvider.GetArea()[0][2])
 	fmt.Println(testSolution.DataProvider.GetArea()[1][2])
@@ -465,7 +465,7 @@ func TestPushAxisYUPAtY6X2PushOneBoxinDescExample(t *testing.T) {
 	fmt.Println(testSolution.DataProvider.GetArea()[7][2])
 
 	// The wanted method invocation
-	pushResult := testSolution.PushAxisYnew(C_TOP)
+	pushResult := testSolution.MovementYAxisStraight(C_TOP)
 
 	fmt.Println(testSolution.DataProvider.GetArea()[0][2])
 	fmt.Println(testSolution.DataProvider.GetArea()[1][2])
@@ -524,7 +524,7 @@ func TestPushAxisYUPAtY5X2PushOneBoxinDescExample(t *testing.T) {
 	fmt.Println(testSolution.DataProvider.GetArea()[7][2])
 
 	// The wanted method invocation
-	pushResult := testSolution.PushAxisYnew(C_TOP)
+	pushResult := testSolution.MovementYAxisStraight(C_TOP)
 
 	fmt.Println(testSolution.DataProvider.GetArea()[0][2])
 	fmt.Println(testSolution.DataProvider.GetArea()[1][2])
@@ -583,7 +583,7 @@ func TestPushAxisYUPAtY4X2WallBoxinDescExample(t *testing.T) {
 	fmt.Println(testSolution.DataProvider.GetArea()[7][2])
 
 	// The wanted method invocation
-	pushResult := testSolution.PushAxisYnew(C_TOP)
+	pushResult := testSolution.MovementYAxisStraight(C_TOP)
 
 	fmt.Println(testSolution.DataProvider.GetArea()[0][2])
 	fmt.Println(testSolution.DataProvider.GetArea()[1][2])
@@ -724,7 +724,7 @@ func TestPushAxisXRightPart2AtY1X4inDescExample(t *testing.T) {
 	// Wanted # # . . . @ [ ] . . [ ] . . # #
 	fmt.Println("line pretest: ", testArea[1])
 
-	testArea = testSolution.PushAxisXpart2(testArea, C_RIGHT)
+	testArea = testSolution.MovementXAxisGrouped(testArea, C_RIGHT)
 	fmt.Println("line posttest: ", testArea[1])
 
 	// Expected results
@@ -751,7 +751,7 @@ func TestPushAxisXRightPart2AtY1X5inDescExample(t *testing.T) {
 	// Wanted # # . . . . @ [ ] . [ ] . . # #
 	fmt.Println("line pretest: ", testArea[1])
 
-	testArea = testSolution.PushAxisXpart2(testArea, C_RIGHT)
+	testArea = testSolution.MovementXAxisGrouped(testArea, C_RIGHT)
 	fmt.Println("line posttest: ", testArea[1])
 
 	// Expected results
@@ -781,7 +781,7 @@ func TestPushAxisXRightPart2AtY1X6inDescExample(t *testing.T) {
 	// Wanted # # . . . . @ [ ] . [ ] . . # #
 	fmt.Println("line pretest: ", testArea[1])
 
-	testArea = testSolution.PushAxisXpart2(testArea, C_RIGHT)
+	testArea = testSolution.MovementXAxisGrouped(testArea, C_RIGHT)
 	fmt.Println("line posttest: ", testArea[1])
 
 	// Expected results
@@ -812,7 +812,7 @@ func TestPushAxisXRightPart2AtY1X7inDescExample(t *testing.T) {
 	// Wanted # # . . . . @ [ ] . [ ] . . # #
 	fmt.Println("line pretest: ", testArea[1])
 
-	testArea = testSolution.PushAxisXpart2(testArea, C_RIGHT)
+	testArea = testSolution.MovementXAxisGrouped(testArea, C_RIGHT)
 	fmt.Println("line posttest: ", testArea[1])
 
 	// Expected results
@@ -846,7 +846,7 @@ func TestPushAxisXRightPart2AtY1X8inDescExample(t *testing.T) {
 	// Wanted # # . . . . @ [ ] . [ ] . . # #
 	fmt.Println("line pretest: ", testArea[1])
 
-	testArea = testSolution.PushAxisXpart2(testArea, C_RIGHT)
+	testArea = testSolution.MovementXAxisGrouped(testArea, C_RIGHT)
 	fmt.Println("line posttest: ", testArea[1])
 
 	// Expected results
@@ -883,7 +883,7 @@ func TestPushAxisXLeftPart2AtY1X13inDescExample(t *testing.T) {
 	// Wanted # # . . . . @ [ ] . [ ] . . # #
 	fmt.Println("line pretest: ", testArea[1])
 
-	testArea = testSolution.PushAxisXpart2(testArea, C_LEFT)
+	testArea = testSolution.MovementXAxisGrouped(testArea, C_LEFT)
 	fmt.Println("line posttest: ", testArea[1])
 
 	// Expected results
@@ -920,7 +920,7 @@ func TestPushAxisXLeftPart2AtY1X12inDescExample(t *testing.T) {
 	// Wanted # # . . . . @ [ ] . [ ] . . # #
 	fmt.Println("line pretest: ", testArea[1])
 
-	testArea = testSolution.PushAxisXpart2(testArea, C_LEFT)
+	testArea = testSolution.MovementXAxisGrouped(testArea, C_LEFT)
 	fmt.Println("line posttest: ", testArea[1])
 
 	// Expected results
@@ -957,7 +957,7 @@ func TestPushAxisXLeftPart2AtY1X11inDescExample(t *testing.T) {
 	// Wanted # # . . . . @ [ ] . [ ] . . # #
 	fmt.Println("line pretest: ", testArea[1])
 
-	testArea = testSolution.PushAxisXpart2(testArea, C_LEFT)
+	testArea = testSolution.MovementXAxisGrouped(testArea, C_LEFT)
 	fmt.Println("line posttest: ", testArea[1])
 
 	// Expected results
@@ -994,7 +994,7 @@ func TestPushAxisXLeftPart2AtY1X10Push2BoxesinDescExample(t *testing.T) {
 	// Wanted # # . . . . @ [ ] . [ ] . . # #
 	fmt.Println("line pretest: ", testArea[1])
 
-	testArea = testSolution.PushAxisXpart2(testArea, C_LEFT)
+	testArea = testSolution.MovementXAxisGrouped(testArea, C_LEFT)
 	fmt.Println("line posttest: ", testArea[1])
 
 	// Expected results
@@ -1031,7 +1031,7 @@ func TestPushAxisXLeftPart2AtY1X10Push3BoxesinDescExample(t *testing.T) {
 	// Wanted # # . . . . @ [ ] . [ ] . . # #
 	fmt.Println("line pretest: ", testArea[1])
 
-	testArea = testSolution.PushAxisXpart2(testArea, C_LEFT)
+	testArea = testSolution.MovementXAxisGrouped(testArea, C_LEFT)
 	fmt.Println("line posttest: ", testArea[1])
 
 	// Expected results
@@ -1067,14 +1067,14 @@ func TestPushAxisXLeftPart2AtY1X8WallNoMovementinDescExample(t *testing.T) {
 	// Wanted # # . . . . @ [ ] . [ ] . . # #
 	fmt.Println("line pretest: ", testArea[1])
 
-	testArea = testSolution.PushAxisXpart2(testArea, C_LEFT)
+	testArea = testSolution.MovementXAxisGrouped(testArea, C_LEFT)
 	fmt.Println("line posttest: ", testArea[1])
 
 	// Expected results
 	assert.Equal(t, testArea[1], []string{"#", "#", "[", "]", "[", "]", "[", "]", "@", ".", ".", ".", ".", ".", "#", "#"})
 }
 
-func TestPushAxisYpart2DownAtY3X2PushDownOneinDescExample(t *testing.T) {
+func TestMovementYAxisGroupedDownAtY3X2PushDownOneinDescExample(t *testing.T) {
 
 	path := "./test_data/data_2.txt"
 
@@ -1112,7 +1112,7 @@ func TestPushAxisYpart2DownAtY3X2PushDownOneinDescExample(t *testing.T) {
 	}
 
 	// The wanted method invocation
-	testArea = testSolution.PushAxisYpart2(testArea, C_DOWN)
+	testArea = testSolution.MovementYAxisGrouped(testArea, C_DOWN)
 
 	for _, line := range testArea {
 		fmt.Println(line)
@@ -1130,7 +1130,7 @@ func TestPushAxisYpart2DownAtY3X2PushDownOneinDescExample(t *testing.T) {
 	assert.Equal(t, testArea[7][2], "#")
 }
 
-func TestPushAxisYpart2DownAtY3X2PushDownTripleHalfStackWallNoMovementInDescExample(t *testing.T) {
+func TestMovementYAxisGroupedDownAtY3X2PushDownTripleHalfStackWallNoMovementInDescExample(t *testing.T) {
 
 	path := "./test_data/data_2.txt"
 
@@ -1171,7 +1171,7 @@ func TestPushAxisYpart2DownAtY3X2PushDownTripleHalfStackWallNoMovementInDescExam
 	}
 
 	// The wanted method invocation
-	testArea = testSolution.PushAxisYpart2(testArea, C_DOWN)
+	testArea = testSolution.MovementYAxisGrouped(testArea, C_DOWN)
 
 	for _, line := range testArea {
 		fmt.Println(line)
@@ -1189,7 +1189,7 @@ func TestPushAxisYpart2DownAtY3X2PushDownTripleHalfStackWallNoMovementInDescExam
 	assert.Equal(t, testArea[7][2], "#")
 }
 
-func TestPushAxisYpart2DownAtY3X2PushDownTripleHalfStackInDescExample(t *testing.T) {
+func TestMovementYAxisGroupedDownAtY3X2PushDownTripleHalfStackInDescExample(t *testing.T) {
 
 	path := "./test_data/data_6.txt"
 
@@ -1230,7 +1230,7 @@ func TestPushAxisYpart2DownAtY3X2PushDownTripleHalfStackInDescExample(t *testing
 	}
 
 	// The wanted method invocation
-	testArea = testSolution.PushAxisYpart2(testArea, C_DOWN)
+	testArea = testSolution.MovementYAxisGrouped(testArea, C_DOWN)
 
 	for _, line := range testArea {
 		fmt.Println(line)
@@ -1251,7 +1251,7 @@ func TestPushAxisYpart2DownAtY3X2PushDownTripleHalfStackInDescExample(t *testing
 	assert.Equal(t, testArea[7][3], "#")
 }
 
-func TestPushAxisYpart2UpAtY3X2PushDownTripleHalfStackInDescExample(t *testing.T) {
+func TestMovementYAxisGroupedUpAtY3X2PushDownTripleHalfStackInDescExample(t *testing.T) {
 
 	path := "./test_data/data_5.txt"
 
@@ -1306,7 +1306,7 @@ func TestPushAxisYpart2UpAtY3X2PushDownTripleHalfStackInDescExample(t *testing.T
 	}
 
 	// The wanted method invocation
-	testArea = testSolution.PushAxisYpart2(testArea, C_TOP)
+	testArea = testSolution.MovementYAxisGrouped(testArea, C_TOP)
 
 	for _, line := range testArea {
 		fmt.Println(line)
@@ -1320,7 +1320,7 @@ func TestPushAxisYpart2UpAtY3X2PushDownTripleHalfStackInDescExample(t *testing.T
 	assert.Equal(t, testArea[2][8], "]")
 }
 
-func TestPushAxisYpart2DownAtY3X2PushDownTripleHalfStackWithMultipleconnectedInDescExample(t *testing.T) {
+func TestMovementYAxisGroupedDownAtY3X2PushDownTripleHalfStackWithMultipleconnectedInDescExample(t *testing.T) {
 
 	path := "./test_data/data_6.txt"
 
@@ -1365,7 +1365,7 @@ func TestPushAxisYpart2DownAtY3X2PushDownTripleHalfStackWithMultipleconnectedInD
 	}
 
 	// The wanted method invocation
-	testArea = testSolution.PushAxisYpart2(testArea, C_DOWN)
+	testArea = testSolution.MovementYAxisGrouped(testArea, C_DOWN)
 
 	for _, line := range testArea {
 		fmt.Println(line)
@@ -1404,7 +1404,7 @@ func TestPushAxisYpart2DownAtY3X2PushDownTripleHalfStackWithMultipleconnectedInD
 [# # . . . . . . . . [ ] . . . . . . # #]
 [# # # # # # # # # # # # # # # # # # # #]
 */
-func TestPushAxisYpart2UpAtY6X3TwoSimpleStackedWithEdgeCaseInDescExample(t *testing.T) {
+func TestMovementYAxisGroupedUpAtY6X3TwoSimpleStackedWithEdgeCaseInDescExample(t *testing.T) {
 
 	path := "./test_data/data_6.txt"
 
@@ -1445,7 +1445,7 @@ func TestPushAxisYpart2UpAtY6X3TwoSimpleStackedWithEdgeCaseInDescExample(t *test
 	}
 
 	// The wanted method invocation
-	testArea = testSolution.PushAxisYpart2(testArea, C_TOP)
+	testArea = testSolution.MovementYAxisGrouped(testArea, C_TOP)
 
 	for _, line := range testArea {
 		fmt.Println(line)
@@ -1486,7 +1486,7 @@ because of this logic.
 [# # . . . . . . . . [ ] . . . . . . # #]
 [# # # # # # # # # # # # # # # # # # # #]
 */
-func TestPushAxisYpart2UpAtY5X4PentaStackWithWallEdgeCaseInDescExample(t *testing.T) {
+func TestMovementYAxisGroupedUpAtY5X4PentaStackWithWallEdgeCaseInDescExample(t *testing.T) {
 
 	path := "./test_data/data_6.txt"
 
@@ -1525,27 +1525,16 @@ func TestPushAxisYpart2UpAtY5X4PentaStackWithWallEdgeCaseInDescExample(t *testin
 	}
 
 	// The wanted method invocation
-	testArea = testSolution.PushAxisYpart2(testArea, C_TOP)
+	testArea = testSolution.MovementYAxisGrouped(testArea, C_TOP)
 
 	for _, line := range testArea {
 		fmt.Println(line)
 	}
 
 	// Expected results
-	assert.Equal(t, testArea[0][2], "#")
-	assert.Equal(t, testArea[0][3], "#")
-	assert.Equal(t, testArea[1][2], ".")
-	assert.Equal(t, testArea[1][3], ".")
-	assert.Equal(t, testArea[2][2], ".")
-	assert.Equal(t, testArea[2][3], ".")
-	assert.Equal(t, testArea[3][2], "[")
-	assert.Equal(t, testArea[3][3], "]")
-	assert.Equal(t, testArea[3][4], "[")
-	assert.Equal(t, testArea[3][5], "]")
-	assert.Equal(t, testArea[4][2], "[")
-	assert.Equal(t, testArea[4][3], "]")
-	assert.Equal(t, testArea[5][2], ".")
-	assert.Equal(t, testArea[5][3], "@")
+	assert.Equal(t, testArea[5][4], ROBOT)
+	assert.Equal(t, testArea[4][4], BOX_LEFT)
+	assert.Equal(t, testArea[4][5], BOX_RIGHT)
 }
 
 func TestIntegrationPart2CalcBWith480DataSet(t *testing.T) {

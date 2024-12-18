@@ -1,7 +1,6 @@
 package solution
 
 import (
-	"fmt"
 	"math"
 	"regexp"
 	"slices"
@@ -443,31 +442,6 @@ func (s *Solution) ConvertPart1AreaToPart2Version() [][]string {
 	return part2_area
 }
 
-/*
-
-
-   # Flood fill (with pattern checking(?))
-   def find_group(self, plant, points: dict, stack: list, visited):
-       if len(stack) > 0:
-           vertice = stack.pop()
-
-           if self.area[vertice[0]][vertice[1]] == plant:
-               points[(vertice[0], vertice[1])] = 1
-               visited[vertice[0]][vertice[1]]+=1
-           else:
-               return
-
-           for move in self.movement:
-
-               n_y = vertice[0] + move[0]
-               n_x = vertice[1] + move[1]
-               if (n_y >=0 and n_y < len(self.area) and n_x >= 0 and n_x < len(self.area[0])):
-                   if self.area[n_y][n_x] == plant and points.get((n_y, n_x)) is None:
-                       stack.append((n_y, n_x))
-           self.find_group(plant, points, stack, visited)
-
-*/
-
 type Stack[T any] struct {
 	items []T
 }
@@ -484,6 +458,7 @@ func (s *Stack[T]) Push(point T) {
 func (s *Stack[T]) Pop() T {
 	// That is the drawback of generics,
 	// safety check in code, not in DS
+	// No nil value for T
 	point := s.items[0]
 	s.items = s.items[1:]
 	return point
@@ -563,19 +538,13 @@ func (s *Solution) IsNextStepEligible(area [][]string, points [][]int, y, x, n_y
 		return false
 	}
 
-	// if (area[n_y][n_x] == BOX_RIGHT && area[y][x] == BOX_RIGHT && n_x != x) ||
-	// 	area[n_y][n_x] == BOX_LEFT && area[y][x] == BOX_LEFT && n_x != x {
-	// 	return false
-	// }
-
 	return true
 }
 
 func (s *Solution) FloodFillTheYaxis(area [][]string, points *[][]int, stack *Stack[[]int], dir string, s_y int, s_x int) {
-	fmt.Println("Stack length: ", len(stack.items), " contents", stack.items, " dir: ", dir)
+	//fmt.Println("Stack length: ", len(stack.items), " contents", stack.items, " dir: ", dir)
 	if !stack.IsEmpty() {
 		p := stack.Pop()
-		//fmt.Println("PROBA 1", p, " ", area[p[0]][p[1]])
 
 		if s.IsInBoxesGroup(area, (*points), p[0], p[1], s_y, s_x, dir) {
 			if !slices.ContainsFunc((*points), func(checked []int) bool {
@@ -586,7 +555,6 @@ func (s *Solution) FloodFillTheYaxis(area [][]string, points *[][]int, stack *St
 			}) {
 				(*points) = append((*points), p)
 			}
-			//fmt.Println("PROBA 2", (*points))
 		}
 
 		begin_i := 0
@@ -600,21 +568,13 @@ func (s *Solution) FloodFillTheYaxis(area [][]string, points *[][]int, stack *St
 		}
 
 		for i := begin_i; i <= max_i; i++ {
-			// if dir == C_TOP && i == I_DOWN {
-			// 	continue
-			// }
-			// if dir == C_DOWN && i == I_TOP {
-			// 	continue
-			// }
 			n_y := p[0] + movement_y[i]
 			n_x := p[1] + movement_x[i]
 
 			if s.IsPointSafe(area, n_y, n_x) {
-				fmt.Println("PROBA 3", n_y, " ", n_x)
 				if s.IsNextStepEligible(area, (*points), p[0], p[1], n_y, n_x) {
 					if !slices.ContainsFunc(stack.items, func(checked []int) bool {
 						if checked[0] == n_y && checked[1] == n_x {
-							fmt.Println("ASDAWEHEJAHO")
 							return true
 						}
 						return false
@@ -638,7 +598,7 @@ going up (the lowest index) / going down (the highest index)
 - If not, increment every height by one
 - Move the lazy robot's a... to the right spot.
 */
-func (s *Solution) PushAxisYpart2(area [][]string, d string) [][]string {
+func (s *Solution) MovementYAxisGrouped(area [][]string, d string) [][]string {
 
 	y, x := s.FindRobotPosition(area)
 
@@ -653,7 +613,6 @@ func (s *Solution) PushAxisYpart2(area [][]string, d string) [][]string {
 			return area
 		}
 
-		//fmt.Println("TESTING @ZE IDEA")
 		points := [][]int{}
 		stack := Stack[[]int]{}
 		stack.Push([]int{y - 1, x})
@@ -670,7 +629,6 @@ func (s *Solution) PushAxisYpart2(area [][]string, d string) [][]string {
 		}
 
 		s.FloodFillTheYaxis(area, &points, &stack, C_TOP, y-1, x)
-		//fmt.Println("Len points", len(points))
 
 		if len(points) == 0 {
 			if area[y-1][x] != WALL {
@@ -688,11 +646,8 @@ func (s *Solution) PushAxisYpart2(area [][]string, d string) [][]string {
 		})
 
 		for _, p := range points {
-			fmt.Println("Point", "(", p[0], ",", p[1], ")", " ", area[p[0]][p[1]])
-
+			//fmt.Println("Point", "(", p[0], ",", p[1], ")", " ", area[p[0]][p[1]])
 			if area[p[0]-1][p[1]] == WALL {
-				// Wypierdalać
-				//fmt.Println("Wypuerdalac")
 				return area
 			}
 		}
@@ -707,85 +662,6 @@ func (s *Solution) PushAxisYpart2(area [][]string, d string) [][]string {
 		}
 		area[y-1][x] = ROBOT
 		area[y][x] = BLANK
-
-		// ///////////
-		// if area[y-1][x] == WALL {
-		// 	return area
-		// }
-
-		// fmt.Println("TESTING @ZE IDEA")
-		// points := [][]int{}
-		// stack := Stack[[]int]{}
-		// stack.Push([]int{y + movement_y[I_TOP], x})
-		// s.FloodFillTheYaxis(area, &points, &stack)
-		// fmt.Println(points)
-
-		// slices.SortFunc(points, func(f []int, s []int) int {
-		// 	if f[0] > s[1] {
-		// 		return 1
-		// 	}
-		// 	return -1
-		// })
-
-		// // Convert to a vertical slice. TOP-DOWN
-		// vertical_line := ""
-		// for _, line := range area {
-		// 	vertical_line += line[x]
-		// }
-
-		// boxesMatch, _ := regexp.Compile(`[\[\]]+`)
-		// boxes := boxesMatch.FindAllString(vertical_line, -1)
-		// indexes := boxesMatch.FindAllStringIndex(vertical_line, -1)
-
-		// // Filtering the indexes with garbage collection
-		// filter := indexes[:0]
-		// filtered_boxes := boxes[:0]
-
-		// for i, candidate := range indexes {
-		// 	if candidate[1] <= y {
-		// 		filter = append(filter, candidate)
-		// 		filtered_boxes = append(filtered_boxes, boxes[i])
-		// 	}
-		// }
-
-		// for i := len(filter); i < len(indexes); i++ {
-		// 	indexes[i] = nil // or the zero value of T
-		// }
-
-		// // If all of the boxes are on the opposite side, move and fajrant
-		// if len(filter) == 0 {
-		// 	area[y][x] = BLANK
-		// 	area[y-1][x] = ROBOT
-		// 	return area
-		// }
-
-		// //fmt.Println("TOPSTART! ", filter)
-		// //fmt.Println(filtered_boxes)
-		// //fmt.Println("Edge case", s.DataProvider.GetArea()[filter[len(filter)-1][0]-1][x])
-
-		// /* How to piece together the flood fill alg with this logic>? */
-
-		// // If the boxes are further than 1 from the robot, move the robot and fajrant
-		// if filter[len(filter)-1][1] != y {
-		// 	area[y][x] = BLANK
-		// 	area[y-1][x] = ROBOT
-		// 	//fmt.Println("ASDASDSDASD")
-		// 	return area
-		// } else if area[filter[len(filter)-1][0]-1][x] == WALL {
-		// 	//fmt.Println("ASDASDASFEFWW#CWECWE")
-		// 	return area
-		// } else {
-		// 	// Move the robot on the first found index
-		// 	area[filter[len(filter)-1][1]-1][x] = ROBOT
-		// 	area[filter[len(filter)-1][1]][x] = BLANK
-
-		// 	//fmt.Println("ASDASDD")
-		// 	// Shift the boxes by one to the right
-		// 	for i := 0; i < len(filtered_boxes[len(filtered_boxes)-1]); i++ {
-		// 		area[filter[len(filter)-1][0]-1+i][x] = BOX
-		// 	}
-
-		//}
 	case C_DOWN:
 		if area[y+1][x] == WALL {
 			return area
@@ -796,7 +672,6 @@ func (s *Solution) PushAxisYpart2(area [][]string, d string) [][]string {
 			return area
 		}
 
-		//fmt.Println("TESTING @ZE IDEA")
 		points := [][]int{}
 		stack := Stack[[]int]{}
 		stack.Push([]int{y + 1, x})
@@ -813,7 +688,6 @@ func (s *Solution) PushAxisYpart2(area [][]string, d string) [][]string {
 		}
 
 		s.FloodFillTheYaxis(area, &points, &stack, C_DOWN, y, x)
-		//fmt.Println("Len points", len(points))
 
 		if len(points) == 0 {
 			if area[y+1][x] != WALL {
@@ -832,10 +706,7 @@ func (s *Solution) PushAxisYpart2(area [][]string, d string) [][]string {
 
 		for _, p := range points {
 			//fmt.Println("Point", "(", p[0], ",", p[1], ")", " ", area[p[0]][p[1]])
-
 			if area[p[0]+1][p[1]] == WALL {
-				// Wypierdalać
-				//fmt.Println("Wypuerdalac")
 				return area
 			}
 		}
@@ -850,68 +721,12 @@ func (s *Solution) PushAxisYpart2(area [][]string, d string) [][]string {
 		}
 		area[y+1][x] = ROBOT
 		area[y][x] = BLANK
-
-		// vertical_line := ""
-		// for _, line := range area {
-		// 	vertical_line += line[x]
-		// }
-
-		// boxesMatch, _ := regexp.Compile(`[\[\]]+`)
-		// boxes := boxesMatch.FindAllString(vertical_line, -1)
-		// indexes := boxesMatch.FindAllStringIndex(vertical_line, -1)
-
-		// // Filtering the indexes with garbage collection
-		// filter := indexes[:0]
-		// filtered_boxes := boxes[:0]
-
-		// for i, candidate := range indexes {
-		// 	if candidate[0] > y {
-		// 		filter = append(filter, candidate)
-		// 		filtered_boxes = append(filtered_boxes, boxes[i])
-		// 	}
-		// }
-
-		// for i := len(filter); i < len(indexes); i++ {
-		// 	indexes[i] = nil // or the zero value of T
-		// }
-
-		// // If all of the boxes are on the opposite side, move and fajrant
-		// if len(filter) == 0 {
-		// 	area[y][x] = BLANK
-		// 	area[y+1][x] = ROBOT
-		// 	return area
-		// }
-
-		// //fmt.Println("DOWNSTART! ", filter)
-		// //fmt.Println(filtered_boxes)
-
-		// // If the boxes are further than 1 from the robot, move the robot and fajrant
-		// if math.Abs(float64(filter[0][0]-y)) != 1 {
-		// 	area[y][x] = BLANK
-		// 	area[y+1][x] = ROBOT
-		// 	//fmt.Println("ASDASDSDASD")
-		// 	return area
-		// } else if area[filter[0][1]][x] == WALL {
-		// 	//fmt.Println("ASDASDSDASDsdfsadf")
-		// 	return area
-		// } else {
-		// 	// Move the robot on the first found index
-		// 	area[filter[0][0]][x] = ROBOT
-		// 	area[filter[0][0]-1][x] = BLANK
-
-		// 	//fmt.Println("ASDASDAAA")
-		// 	// Shift the boxes by one to the right
-		// 	for i := 0; i < len(filtered_boxes[0]); i++ {
-		// 		area[filter[0][0]+1+i][x] = BOX
-		// 	}
-
-		// }
 	}
 
 	return area
 }
 
-func (s *Solution) PushAxisXpart2(area [][]string, d string) [][]string {
+func (s *Solution) MovementXAxisGrouped(area [][]string, d string) [][]string {
 	/*
 		I see It this way.
 		- Seek the position of the robot
@@ -925,13 +740,10 @@ func (s *Solution) PushAxisXpart2(area [][]string, d string) [][]string {
 	*/
 
 	y, x := s.FindRobotPosition(area)
-	fmt.Println("Where is ze robot ", " coords: ", y, x)
-	//fmt.Println(y, x, "EHASD")
 
 	switch d {
 	case C_RIGHT:
 		if area[y][x+1] == WALL {
-			//fmt.Println("ASDAGEDWW")
 			return area
 		}
 		boxesMatch, _ := regexp.Compile(`[\[\]]+`)
@@ -957,13 +769,11 @@ func (s *Solution) PushAxisXpart2(area [][]string, d string) [][]string {
 		if len(filter) == 0 || len(filtered_boxes) == 0 {
 			area[y][x] = BLANK
 			area[y][x+1] = ROBOT
-			//fmt.Println("HELO!")
 			return area
 		}
 
 		// If the boxes are further than 1 from the robot, move the robot and fajrant
 		if math.Abs(float64(filter[0][0]-x)) != 1 {
-			//fmt.Println("JELO")
 			area[y][x] = BLANK
 			area[y][x+1] = ROBOT
 			return area
@@ -1045,70 +855,32 @@ func (s *Solution) PushAxisXpart2(area [][]string, d string) [][]string {
 func (s *Solution) Part2() int {
 	area := s.ConvertPart1AreaToPart2Version()
 
-	for _, line := range area {
-		fmt.Println(line)
-	}
-
 	for _, command := range s.DataProvider.GetCommands() {
-		for _, line := range area {
-			fmt.Println(line)
-		}
-		// if i > 5 {
-		// 	break
-		// }
-		//y, x := s.FindRobotPosition(s.DataProvider.GetArea())
-
-		//fmt.Println(area)
 		switch command {
 		case C_TOP:
-			//
-			fmt.Println("Command top")
-			// if s.DataProvider.GetArea()[y-1][x] == WALL {
-			// 	continue
-			// }
-			area = s.PushAxisYpart2(area, C_TOP)
+			area = s.MovementYAxisGrouped(area, C_TOP)
 
 		case C_RIGHT:
-			//
-			fmt.Println("Command right")
-			// if s.DataProvider.GetArea()[y][x+1] == WALL {
-			// 	continue
-			// }
-			area = s.PushAxisXpart2(area, C_RIGHT)
+			area = s.MovementXAxisGrouped(area, C_RIGHT)
 
 		case C_DOWN:
-			//
-			fmt.Println("Command down")
-			// if s.DataProvider.GetArea()[y+1][x] == WALL {
-			// 	continue
-			// }
-			area = s.PushAxisYpart2(area, C_DOWN)
+			area = s.MovementYAxisGrouped(area, C_DOWN)
 
 		case C_LEFT:
-			//
-			fmt.Println("Command left")
-			// if s.DataProvider.GetArea()[y][x-1] == WALL {
-			// 	continue
-			// }
-			area = s.PushAxisXpart2(area, C_LEFT)
+			area = s.MovementXAxisGrouped(area, C_LEFT)
 		}
-	}
-
-	for _, line := range area {
-		fmt.Println(line)
 	}
 
 	res := 0
 
-	// Change for regex style
 	for y, line := range area {
+
+		// Regex searching the boxes in particular lines
 		boxesMatch, _ := regexp.Compile(`[\[][\]]`)
 		indexes := boxesMatch.FindAllStringIndex(strings.Join(line, ""), -1)
 		for _, index := range indexes {
-			fmt.Println(index)
 			res += y*100 + index[0]
 		}
-		fmt.Println("PRzerwa")
 	}
 
 	return res

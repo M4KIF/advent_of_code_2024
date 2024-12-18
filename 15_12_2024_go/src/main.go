@@ -13,6 +13,6 @@ func main() {
 	provider := data_provider.NewDataProvider(crud)
 	solution := solution.NewSolution(provider, "/data.txt")
 
-	logging.Info("Part1 result: ", "value", solution.Part1())
-	//logging.Info("Part2 result: ", "value", solution.Part2())
+	//logging.Info("Part1 result: ", "value", solution.Part1())
+	logging.Info("Part2 result: ", "value", solution.Part2())
 }
