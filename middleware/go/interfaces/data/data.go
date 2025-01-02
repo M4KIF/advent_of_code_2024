@@ -31,6 +31,6 @@ type String2Dand1Darray interface {
 type StringArea2DStartEnd interface {
 	TakeInput(string) bool
 	GetArea() [][]string
-	GetStartPoint() []int
-	GetEndPoint() []int
+	GetStartPoint() [2]int
+	GetEndPoint() [2]int
 }

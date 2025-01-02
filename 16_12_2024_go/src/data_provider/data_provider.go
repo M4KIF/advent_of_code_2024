@@ -12,8 +12,8 @@ import (
 type DataProvider struct {
 	IO    icrud.CRUD
 	Area  [][]string
-	Start []int
-	End   []int
+	Start [2]int
+	End   [2]int
 }
 
 func NewDataProvider(io icrud.CRUD) *DataProvider {
@@ -46,9 +46,9 @@ func (d *DataProvider) TakeInput(path string) bool {
 				// Finding the starting and ending point in the mean-time
 				if string(c) == "S" {
 					fmt.Println("SZTARTA")
-					d.Start = []int{y, x}
+					d.Start = [2]int{y, x}
 				} else if string(c) == "E" {
-					d.End = []int{y, x}
+					d.End = [2]int{y, x}
 				}
 				temp = append(temp, string(c))
 				x++
@@ -72,10 +72,10 @@ func (d *DataProvider) GetArea() [][]string {
 	return d.Area
 }
 
-func (d *DataProvider) GetStartPoint() []int {
+func (d *DataProvider) GetStartPoint() [2]int {
 	return d.Start
 }
 
-func (d *DataProvider) GetEndPoint() []int {
+func (d *DataProvider) GetEndPoint() [2]int {
 	return d.End
 }
