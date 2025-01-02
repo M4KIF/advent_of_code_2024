@@ -106,15 +106,14 @@ func (pq *PriorityQueueAStar) Pop() any {
 	return item
 }
 
-func (pq *PriorityQueueAStar) Get(point [3]int) *AStarHelper {
+func (pq *PriorityQueueAStar) Get(point [2]int) *AStarHelper {
 	if pq.Len() == 0 {
 		return nil
 	}
 
 	for i := 0; i < pq.Len(); i++ {
 		if (*pq)[i].Vertice.Coordinates.y == point[0] &&
-			(*pq)[i].Vertice.Coordinates.x == point[1] &&
-			(*pq)[i].Vertice.Direction == point[2] {
+			(*pq)[i].Vertice.Coordinates.x == point[1] {
 			return (*pq)[i]
 		}
 	}
@@ -206,8 +205,8 @@ func (s *Solution) AStarAlternate(vertices *map[[2]int]*Vertice, start, end [2]i
 	first := AStarHelper{Vertice: StartVertice, ParentVertice: nil, H: 0, G: 0, Direction: LEFT1}
 	heap.Push(&open, &first)
 
-	cost_so_far := map[[3]int]*AStarHelper{}
-	cost_so_far[[3]int{StartVertice.Coordinates.y, StartVertice.Coordinates.x, StartVertice.Direction}] = &first
+	cost_so_far := map[[2]int]*AStarHelper{}
+	cost_so_far[[2]int{StartVertice.Coordinates.y, StartVertice.Coordinates.x}] = &first
 	// cost_so_far := map[[2]int]*AStarHelper{}
 	// cost_so_far[[2]int{StartVertice.Coordinates.y, StartVertice.Coordinates.x}] = &first
 
@@ -246,18 +245,18 @@ func (s *Solution) AStarAlternate(vertices *map[[2]int]*Vertice, start, end [2]i
 
 			n_g := checked.G + s.CostOfMovement(checked.Direction, neighbour.Direction)
 
-			if neighbour_in_open := open.Get([3]int{neighbour.Vertice.Coordinates.y, neighbour.Vertice.Coordinates.x, neighbour.Direction}); neighbour_in_open != nil {
+			if neighbour_in_open := open.Get([2]int{neighbour.Vertice.Coordinates.y, neighbour.Vertice.Coordinates.x}); neighbour_in_open != nil {
 				if neighbour_in_open.G > n_g {
 					open.update(neighbour_in_open, neighbour_in_open.Vertice.Coordinates.y, neighbour_in_open.Vertice.Coordinates.x, n_g, 0)
 				}
 				continue
 			}
 
-			if inSearch := cost_so_far[[3]int{neighbour.Vertice.Coordinates.y, neighbour.Vertice.Coordinates.x, neighbour.Direction}]; inSearch != nil {
+			if inSearch := cost_so_far[[2]int{neighbour.Vertice.Coordinates.y, neighbour.Vertice.Coordinates.x}]; inSearch != nil {
 				if inSearch.G > n_g {
 					inSearch.G = n_g
 					open.Push(inSearch)
-					cost_so_far[[3]int{neighbour.Vertice.Coordinates.y, neighbour.Vertice.Coordinates.x, neighbour.Direction}] = nil
+					cost_so_far[[2]int{neighbour.Vertice.Coordinates.y, neighbour.Vertice.Coordinates.x}] = nil
 				}
 				continue
 			}
@@ -270,28 +269,28 @@ func (s *Solution) AStarAlternate(vertices *map[[2]int]*Vertice, start, end [2]i
 			// 	heap.Push(&open, &first)
 			// }
 			first := AStarHelper{Vertice: neighbour.Vertice, ParentVertice: checked.Vertice, H: 0, G: n_g, Direction: neighbour.Direction}
-			cost_so_far[[3]int{neighbour.Vertice.Coordinates.y, neighbour.Vertice.Coordinates.x, neighbour.Direction}] = &first
+			cost_so_far[[2]int{neighbour.Vertice.Coordinates.y, neighbour.Vertice.Coordinates.x}] = &first
 			//cost_so_far[[2]int{neighbour.Vertice.Coordinates.y, neighbour.Vertice.Coordinates.x}] = &first
 			heap.Push(&open, &first)
 		}
 	}
 
 	// Path reconstruction
-	helper := cost_so_far[[3]int{end[0], end[1], UP}]
+	helper := cost_so_far[[2]int{end[0], end[1]}]
 	//helper := cost_so_far[[2]int{end[0], end[1]}]
-	//count := 0
+	count := 0
 	score := helper.G
 
-	// for helper != nil {
+	for helper != nil {
 
-	// 	fmt.Println("", helper.Vertice.Coordinates.y, " ", helper.Vertice.Coordinates.x, " ", helper.Direction, " ", int(helper.G), " ", count)
-	// 	count++
-	// 	if helper.ParentVertice != nil {
-	// 		helper = cost_so_far[[3]int{helper.ParentVertice.Coordinates.y, helper.ParentVertice.Coordinates.x, helper.ParentVertice.Direction}]
-	// 	} else {
-	// 		break
-	// 	}
-	// }
+		fmt.Println("", helper.Vertice.Coordinates.y, " ", helper.Vertice.Coordinates.x, " ", helper.Direction, " ", int(helper.G), " ", count)
+		count++
+		if helper.ParentVertice != nil {
+			helper = cost_so_far[[2]int{helper.ParentVertice.Coordinates.y, helper.ParentVertice.Coordinates.x}]
+		} else {
+			break
+		}
+	}
 
 	return int(score)
 }
@@ -434,17 +433,33 @@ func (s *Solution) H2(y, x int, end [2]int) uint64 {
 }
 
 func (s *Solution) CostOfMovement(oldDir, newDir int) uint64 {
+	if oldDir == LEFT1 && newDir == RIGHT1 {
+		return 1
+	} else if oldDir == UP && newDir == DOWN1 {
+		return 1
+	} else if oldDir == RIGHT1 && newDir == LEFT1 {
+		return 1
+	} else if oldDir == DOWN1 && newDir == UP {
+		return 1
+	} else {
+		diff := math.Round(math.Abs(float64(oldDir - newDir)))
+		if diff > 0 && diff < 3 {
+			return uint64(math.Round(math.Abs(float64(oldDir-newDir))))*1000 + 1
+		} else if diff == 3 {
+			return 1001
+		}
+	}
 
-	diff := math.Round(math.Abs(float64(oldDir - newDir)))
-	// if diff > 0 && diff < 3 {
-	// 	return uint64(math.Round(math.Abs(float64(oldDir-newDir))))*1000 + 1
-	// } else if diff == 3 {
+	// diff := math.Round(math.Abs(float64(oldDir - newDir)))
+	// // if diff > 0 && diff < 3 {
+	// // 	return uint64(math.Round(math.Abs(float64(oldDir-newDir))))*1000 + 1
+	// // } else if diff == 3 {
+	// // 	return 1001
+	// // }
+
+	// if diff != 0 {
 	// 	return 1001
 	// }
-
-	if diff != 0 {
-		return 1001
-	}
 
 	return 1
 }
