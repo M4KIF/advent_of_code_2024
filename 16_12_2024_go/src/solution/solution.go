@@ -3,7 +3,10 @@ package solution
 import (
 	"container/heap"
 	"fmt"
+	"log"
 	"math"
+	"math/big"
+	"time"
 
 	interfaces "github.com/M4KIF/advent_of_code_2024/middleware/go/interfaces/data"
 )
@@ -62,7 +65,7 @@ type Vertice struct {
 type AStarHelper struct {
 	// Non heap related data - business
 	Vertice       *Vertice
-	ParentVertice *Vertice
+	ParentVertice *AStarHelper
 	G             uint64
 	H             uint64
 	Direction     int
@@ -77,10 +80,10 @@ type PriorityQueueAStar []*AStarHelper
 func (pq PriorityQueueAStar) Len() int { return len(pq) }
 
 func (pq PriorityQueueAStar) Less(i, j int) bool {
-	if pq[i].G+pq[i].H == pq[j].G+pq[j].H {
-		return pq[i].H < pq[j].H
-	}
-	return pq[i].G+pq[i].H < pq[j].G+pq[j].H
+	// if (pq[i].G + pq[i].H) == (pq[j].G + pq[j].H) {
+	// 	return pq[i].H < pq[j].H
+	// }
+	return (pq[i].G + pq[i].H) < (pq[j].G + pq[j].H)
 }
 
 func (pq PriorityQueueAStar) Swap(i, j int) {
@@ -210,8 +213,8 @@ func (s *Solution) AStarAlternate(vertices *map[[2]int]*Vertice, start, end [2]i
 	// cost_so_far := map[[2]int]*AStarHelper{}
 	// cost_so_far[[2]int{StartVertice.Coordinates.y, StartVertice.Coordinates.x}] = &first
 
-	visited := map[[3]int]bool{}
-	visited[[3]int{StartVertice.Coordinates.y, StartVertice.Coordinates.x, StartVertice.Direction}] = true
+	visited := map[[2]int]bool{}
+	visited[[2]int{StartVertice.Coordinates.y, StartVertice.Coordinates.x}] = true
 	// visited := map[[2]int]bool{}
 	// visited[[2]int{StartVertice.Coordinates.y, StartVertice.Coordinates.x}] = true
 
@@ -221,10 +224,10 @@ func (s *Solution) AStarAlternate(vertices *map[[2]int]*Vertice, start, end [2]i
 		fmt.Println("", checked.Vertice.Coordinates.y, " ", checked.Vertice.Coordinates.x, " ", checked.Direction, " ", int(checked.G))
 		//time.Sleep(time.Second)
 
-		if checked.Vertice.Coordinates.y == end[0] &&
-			checked.Vertice.Coordinates.x == end[1] {
-			break
-		}
+		// if checked.Vertice.Coordinates.y == end[0] &&
+		// 	checked.Vertice.Coordinates.x == end[1] {
+		// 	break
+		// }
 
 		// if visited[[3]int{checked.Vertice.Coordinates.y, checked.Vertice.Coordinates.x, checked.Direction}] {
 		// 	continue
@@ -235,64 +238,199 @@ func (s *Solution) AStarAlternate(vertices *map[[2]int]*Vertice, start, end [2]i
 		// }
 
 		for _, neighbour := range checked.Vertice.Neighbours {
-			// inSearch := cost_so_far[[3]int{neighbour.Vertice.Coordinates.y, neighbour.Vertice.Coordinates.x, neighbour.Direction}]
-			// //inSearch := cost_so_far[[2]int{neighbour.Vertice.Coordinates.y, neighbour.Vertice.Coordinates.x}]
+			inSearch := cost_so_far[[2]int{neighbour.Vertice.Coordinates.y, neighbour.Vertice.Coordinates.x}]
+			//inSearch := cost_so_far[[2]int{neighbour.Vertice.Coordinates.y, neighbour.Vertice.Coordinates.x}]
 
-			// g := uint64(math.MaxInt)
-			// if inSearch != nil {
-			// 	g = inSearch.G
-			// }
+			g := uint64(math.MaxInt)
+			if inSearch != nil {
+				g = inSearch.G
+			}
 
 			n_g := checked.G + s.CostOfMovement(checked.Direction, neighbour.Direction)
 
-			if neighbour_in_open := open.Get([2]int{neighbour.Vertice.Coordinates.y, neighbour.Vertice.Coordinates.x}); neighbour_in_open != nil {
-				if neighbour_in_open.G > n_g {
-					open.update(neighbour_in_open, neighbour_in_open.Vertice.Coordinates.y, neighbour_in_open.Vertice.Coordinates.x, n_g, 0)
-				}
-				continue
-			}
-
-			if inSearch := cost_so_far[[2]int{neighbour.Vertice.Coordinates.y, neighbour.Vertice.Coordinates.x}]; inSearch != nil {
-				if inSearch.G > n_g {
-					inSearch.G = n_g
-					open.Push(inSearch)
-					cost_so_far[[2]int{neighbour.Vertice.Coordinates.y, neighbour.Vertice.Coordinates.x}] = nil
-				}
-				continue
-			}
-
-			// if inSearch == nil || (n_g < g && g != math.MaxInt) {
-			// 	//n_h := s.H2(neighbour.Vertice.Coordinates.y, neighbour.Vertice.Coordinates.x, end)
-			// 	first := AStarHelper{Vertice: neighbour.Vertice, ParentVertice: checked.Vertice, H: 0, G: n_g, Direction: neighbour.Direction}
-			// 	cost_so_far[[3]int{neighbour.Vertice.Coordinates.y, neighbour.Vertice.Coordinates.x, neighbour.Direction}] = &first
-			// 	//cost_so_far[[2]int{neighbour.Vertice.Coordinates.y, neighbour.Vertice.Coordinates.x}] = &first
-			// 	heap.Push(&open, &first)
+			// if neighbour_in_open := open.Get([2]int{neighbour.Vertice.Coordinates.y, neighbour.Vertice.Coordinates.x}); neighbour_in_open != nil {
+			// 	if neighbour_in_open.G > n_g {
+			// 		open.update(neighbour_in_open, neighbour_in_open.Vertice.Coordinates.y, neighbour_in_open.Vertice.Coordinates.x, n_g, 0)
+			// 	}
+			// 	continue
 			// }
-			first := AStarHelper{Vertice: neighbour.Vertice, ParentVertice: checked.Vertice, H: 0, G: n_g, Direction: neighbour.Direction}
-			cost_so_far[[2]int{neighbour.Vertice.Coordinates.y, neighbour.Vertice.Coordinates.x}] = &first
-			//cost_so_far[[2]int{neighbour.Vertice.Coordinates.y, neighbour.Vertice.Coordinates.x}] = &first
-			heap.Push(&open, &first)
+
+			// if inSearch := cost_so_far[[2]int{neighbour.Vertice.Coordinates.y, neighbour.Vertice.Coordinates.x}]; inSearch != nil {
+			// 	if inSearch.G > n_g {
+			// 		inSearch.G = n_g
+			// 		open.Push(inSearch)
+			// 		cost_so_far[[2]int{neighbour.Vertice.Coordinates.y, neighbour.Vertice.Coordinates.x}] = nil
+			// 	}
+			// 	continue
+			// }
+
+			if inSearch == nil {
+				n_h := 5 * s.Manhattan(neighbour.Vertice.Coordinates.y, neighbour.Vertice.Coordinates.x, end)
+				first := AStarHelper{Vertice: neighbour.Vertice, ParentVertice: checked, H: n_h, G: n_g, Direction: neighbour.Direction}
+				cost_so_far[[2]int{neighbour.Vertice.Coordinates.y, neighbour.Vertice.Coordinates.x}] = &first
+				visited[[2]int{neighbour.Vertice.Coordinates.y, neighbour.Vertice.Coordinates.x}] = true
+				//cost_so_far[[2]int{neighbour.Vertice.Coordinates.y, neighbour.Vertice.Coordinates.x}] = &first
+				heap.Push(&open, &first)
+			} else if g != math.MaxInt {
+				n_h := uint64(0)
+
+				inSearch.ParentVertice = checked
+				inSearch.G = n_g
+				inSearch.H = n_h
+				inSearch.Direction = neighbour.Direction
+
+				cost_so_far[[2]int{neighbour.Vertice.Coordinates.y, neighbour.Vertice.Coordinates.x}] = inSearch
+				visited[[2]int{neighbour.Vertice.Coordinates.y, neighbour.Vertice.Coordinates.x}] = true
+				//cost_so_far[[2]int{neighbour.Vertice.Coordinates.y, neighbour.Vertice.Coordinates.x}] = &first
+				heap.Push(&open, inSearch)
+			}
+			// }
+			// first := AStarHelper{Vertice: neighbour.Vertice, ParentVertice: checked.Vertice, H: 0, G: n_g, Direction: neighbour.Direction}
+			// cost_so_far[[2]int{neighbour.Vertice.Coordinates.y, neighbour.Vertice.Coordinates.x}] = &first
+			// //cost_so_far[[2]int{neighbour.Vertice.Coordinates.y, neighbour.Vertice.Coordinates.x}] = &first
+			// heap.Push(&open, &first)
 		}
 	}
 
 	// Path reconstruction
 	helper := cost_so_far[[2]int{end[0], end[1]}]
 	//helper := cost_so_far[[2]int{end[0], end[1]}]
-	count := 0
+	//count := 0
 	score := helper.G
 
-	for helper != nil {
+	// for helper != nil {
 
-		fmt.Println("", helper.Vertice.Coordinates.y, " ", helper.Vertice.Coordinates.x, " ", helper.Direction, " ", int(helper.G), " ", count)
-		count++
-		if helper.ParentVertice != nil {
-			helper = cost_so_far[[2]int{helper.ParentVertice.Coordinates.y, helper.ParentVertice.Coordinates.x}]
-		} else {
-			break
+	// 	fmt.Println("", helper.Vertice.Coordinates.y, " ", helper.Vertice.Coordinates.x, " ", helper.Direction, " ", int(helper.G), " ", count)
+	// 	if helper.ParentVertice != nil {
+	// 		count += len(helper.ParentVertice)
+	// 		helper = cost_so_far[[2]int{helper.ParentVertice[len(helper.ParentVertice)-1].Coordinates.y, helper.ParentVertice[len(helper.ParentVertice)-1].Coordinates.x}]
+	// 	} else {
+	// 		break
+	// 	}
+	// }
+
+	return int(score)
+}
+
+// To be used only on success condition, otherwise It will loop forever. It doesn't have any reasonable safety.
+func (s *Solution) ReconstructPath(vertex *AStarHelper, vertices map[[2]int]*Vertice, start, end [2]int) {
+
+	if vertex.Vertice.Coordinates.y == end[0] && vertex.Vertice.Coordinates.x == end[1] {
+		if vertices[[2]int{vertex.Vertice.Coordinates.y, vertex.Vertice.Coordinates.x}] == nil {
+			vertices[[2]int{vertex.Vertice.Coordinates.y, vertex.Vertice.Coordinates.x}] = vertex.Vertice
+		}
+		return
+	}
+
+	if vertices[[2]int{vertex.Vertice.Coordinates.y, vertex.Vertice.Coordinates.x}] == nil {
+		vertices[[2]int{vertex.Vertice.Coordinates.y, vertex.Vertice.Coordinates.x}] = vertex.Vertice
+	}
+
+	s.ReconstructPath(vertex.ParentVertice, vertices, start, end)
+}
+
+func (s *Solution) Dijkstra(vertices *map[[2]int]*Vertice, start, end [2]int) int {
+	open := PriorityQueueAStar{}
+	heap.Init(&open)
+
+	StartVertice := (*vertices)[start]
+	EndVertice := (*vertices)[end]
+	if StartVertice == nil || EndVertice == nil {
+		return 0
+	}
+
+	first := AStarHelper{Vertice: StartVertice, ParentVertice: nil, H: 0, G: 0, Direction: LEFT1}
+	heap.Push(&open, &first)
+
+	cost := map[[3]int]uint64{}
+	cost[[3]int{StartVertice.Coordinates.y, StartVertice.Coordinates.x, LEFT1}] = 0
+
+	visited := map[[4]int]bool{}
+	visited[[4]int{StartVertice.Coordinates.y, StartVertice.Coordinates.x, LEFT1, 0}] = true
+
+	for open.Len() > 0 {
+		checked := heap.Pop(&open).(*AStarHelper)
+
+		// If the end vertex has been found, returns the score
+		if checked.Vertice.Coordinates.y == end[0] &&
+			checked.Vertice.Coordinates.x == end[1] {
+			return int(checked.G)
+		}
+
+		// Dijkstra neighbour checking
+		for _, neighbour := range checked.Vertice.Neighbours {
+			g := cost[[3]int{neighbour.Vertice.Coordinates.y, neighbour.Vertice.Coordinates.x, neighbour.Direction}]
+
+			n_g := checked.G + s.CostOfMovement(checked.Direction, neighbour.Direction)
+
+			if g == 0 || n_g <= g && !visited[[4]int{neighbour.Vertice.Coordinates.y, neighbour.Vertice.Coordinates.x, neighbour.Direction, int(n_g)}] {
+				visited[[4]int{neighbour.Vertice.Coordinates.y, neighbour.Vertice.Coordinates.x, neighbour.Direction, int(n_g)}] = true
+				frontier_element := AStarHelper{Vertice: neighbour.Vertice, ParentVertice: checked, H: 0, G: n_g, Direction: neighbour.Direction}
+				cost[[3]int{neighbour.Vertice.Coordinates.y, neighbour.Vertice.Coordinates.x, neighbour.Direction}] = n_g
+				heap.Push(&open, &frontier_element)
+			}
 		}
 	}
 
-	return int(score)
+	// Error occured
+	return 0
+}
+
+func (s *Solution) DijkstraAllPaths(vertices *map[[2]int]*Vertice, start, end [2]int) (int, int) {
+	open := PriorityQueueAStar{}
+	heap.Init(&open)
+
+	StartVertice := (*vertices)[start]
+	EndVertice := (*vertices)[end]
+	if StartVertice == nil || EndVertice == nil {
+		return 0, 0
+	}
+
+	first := AStarHelper{Vertice: StartVertice, ParentVertice: nil, H: 0, G: 0, Direction: LEFT1}
+	heap.Push(&open, &first)
+
+	cost := map[[3]int]uint64{}
+	cost[[3]int{StartVertice.Coordinates.y, StartVertice.Coordinates.x, LEFT1}] = 0
+
+	best_path_result := math.MaxInt
+	vert := map[[2]int]*Vertice{}
+
+	visited := map[[3]int]bool{}
+	visited[[3]int{StartVertice.Coordinates.y, StartVertice.Coordinates.x, LEFT1}] = true
+
+	for open.Len() > 0 {
+		checked := heap.Pop(&open).(*AStarHelper)
+
+		// If the score gets bigger than the "optimal", the
+		// area of our interest has been exhausted - hence returns
+		if checked.G > uint64(best_path_result) {
+			break
+		}
+
+		// Reconstructing the path on found target,
+		// including the vertices to a set
+		if checked.Vertice.Coordinates.y == end[0] &&
+			checked.Vertice.Coordinates.x == end[1] {
+			s.ReconstructPath(checked, vert, end, start)
+			best_path_result = int(checked.G)
+		}
+
+		// Dijkstra
+		for _, neighbour := range checked.Vertice.Neighbours {
+			g := cost[[3]int{neighbour.Vertice.Coordinates.y, neighbour.Vertice.Coordinates.x, neighbour.Direction}]
+
+			n_g := checked.G + s.CostOfMovement(checked.Direction, neighbour.Direction)
+
+			if g == 0 || n_g <= g && !visited[[3]int{neighbour.Vertice.Coordinates.y, neighbour.Vertice.Coordinates.x, neighbour.Direction}] {
+				//visited[[3]int{neighbour.Vertice.Coordinates.y, neighbour.Vertice.Coordinates.x, neighbour.Direction}] = true
+				frontier_element := AStarHelper{Vertice: neighbour.Vertice, ParentVertice: checked, H: 0, G: n_g, Direction: neighbour.Direction}
+				cost[[3]int{neighbour.Vertice.Coordinates.y, neighbour.Vertice.Coordinates.x, neighbour.Direction}] = n_g
+				heap.Push(&open, &frontier_element)
+			}
+		}
+	}
+
+	return len(vert), best_path_result
 }
 
 // An Item is something we manage in a priority queue.
@@ -422,6 +560,10 @@ func (s *Solution) Chebyshev(y, x int, destination [2]int) uint64 {
 			math.Max(
 				math.Abs(float64(destination[0]-y)),
 				math.Abs(float64(destination[1]-x)))))
+}
+
+func (s *Solution) Manhattan(y, x int, destination [2]int) uint64 {
+	return 2 * uint64(math.Abs(float64(destination[0]-y))+math.Abs(float64(destination[1]-x)))
 }
 
 func (s *Solution) H(y, x int, end []int) uint64 {
@@ -562,20 +704,48 @@ No need for path reconstruction if used recursively(?)
 
 //		return s.Astar(s.DataProvider.GetStartPoint(), s.DataProvider.GetEndPoint())
 //	}
+
+/*
+Both of those colleagues have been solved with one dijkstra custom
+It searches for all paths with "best" cost and exists if all
+options are exhausted
+*/
+
 func (s *Solution) Part1() int {
+
+	start := time.Now()
+
+	r := new(big.Int)
+	fmt.Println(r.Binomial(1000, 10))
 
 	vertices := MakeWalkableVerticesMap(s.DataProvider.GetArea())
 
 	vertices = AssociateWithNeighbours(vertices)
 
-	return s.AStarAlternate(vertices, s.DataProvider.GetStartPoint(), s.DataProvider.GetEndPoint())
-}
+	// Pseudo memo
+	result := s.Dijkstra(vertices, s.DataProvider.GetStartPoint(), s.DataProvider.GetEndPoint())
 
-/*
-PART 2
-*/
+	elapsed := time.Since(start)
+	log.Printf("Calculations for Part1 took %s", elapsed)
+
+	return result
+}
 
 func (s *Solution) Part2() int {
 
-	return 1
+	start := time.Now()
+
+	r := new(big.Int)
+	fmt.Println(r.Binomial(1000, 10))
+
+	vertices := MakeWalkableVerticesMap(s.DataProvider.GetArea())
+
+	vertices = AssociateWithNeighbours(vertices)
+
+	result, _ := s.DijkstraAllPaths(vertices, s.DataProvider.GetStartPoint(), s.DataProvider.GetEndPoint())
+
+	elapsed := time.Since(start)
+	log.Printf("Calculations for Part2 took %s", elapsed)
+
+	return result
 }
