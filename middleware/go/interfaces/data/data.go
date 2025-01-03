@@ -27,3 +27,10 @@ type String2Dand1Darray interface {
 	GetArea() [][]string
 	GetCommands() []string
 }
+
+type StringArea2DStartEnd interface {
+	TakeInput(string) bool
+	GetArea() [][]string
+	GetStartPoint() [2]int
+	GetEndPoint() [2]int
+}
